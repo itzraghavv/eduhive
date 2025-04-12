@@ -12,22 +12,68 @@ export const ChatBox = () => {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState("");
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!input.trim()) return;
-    const userMsg = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMsg]);
+    // const userMsg = { role: "user", content: input };
+    // setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
 
-    setTimeout(() => {
-      const aiMsg = {
-        role: "ai",
-        content: `You said: "${input}". Here's what I think...`,
-      };
-      setMessages((prev) => [...prev, aiMsg]);
-      setLoading(false);
-    }, 1000);
+    // setTimeout(() => {
+    //   const aiMsg = {
+    //     role: "ai",
+    //     content: `You said: "${input}". Here's what I think...`,
+    //   };
+    //   setMessages((prev) => [...prev, aiMsg]);
+    //   setLoading(false);
+    // }, 1000);
+
+    // try {
+    //   // GET RESPONSE FROM GROQ
+    //   const response = await fetch("/api/groq", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       messages: [
+    //         {
+    //           role: "user",
+    //           content: input,
+    //         },
+    //       ],
+    //       model: "llama-3.3-70b-versatile", // Specify the model
+    //       temperature: 0.7, // Specify the temperature
+    //       max_tokens: 1000, // Specify the maximum number of tokens
+    //       top_p: 1, // Specify the top_p value
+    //     }),
+    //   });
+
+    //   // Check if the response is OK (status code 200-299)
+    //   if (!response.ok) {
+    //     throw new Error("Failed to fetch data from the server");
+    //   }
+
+    //   const data = await response.json();
+    //   setMessages((prevMessages) => [
+    //     ...prevMessages,
+    //     { role: "user", content: input },
+    //     {
+    //       role: "assistant",
+    //       content: data.choices[0]?.message?.content || "",
+    //     },
+    //   ]);
+
+    //   setInput(""); // Clear the input field after submission
+    // } catch (err) {
+    //   setError(
+    //     err instanceof Error ? err.message : "An unknown error occurred"
+    //   );
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   useEffect(() => {

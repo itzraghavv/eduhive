@@ -1,3 +1,5 @@
+"use server";
+
 import { NextApiRequest, NextApiResponse } from "next";
 import Groq from "groq-sdk";
 
@@ -22,14 +24,10 @@ export default async function handler(
       // Return the response to the client
       res.status(200).json(chatCompletion);
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          error:
-            error instanceof Error
-              ? error.message
-              : "An unknown error occurred",
-        });
+      res.status(500).json({
+        error:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      });
     }
   } else {
     res.status(405).json({ error: "Method not allowed" });
