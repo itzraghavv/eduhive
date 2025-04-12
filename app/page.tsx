@@ -53,53 +53,43 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-
-    console.log("Input query:", inputText); // Log the input query
-    console.log("Output:", outputText); // Log the output
   };
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <header className="flex items-center justify-between w-full"></header>
-      <main>
-        <input
-          type="text"
-          placeholder="Type something..."
-          className="border border-gray-300 rounded-lg p-2 w-full max-w-md"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSubmit();
-            }
-          }}
-          // disabled={loading}
-          // autoFocus
-          // autoComplete="off"
-          // autoCorrect="off"
-          // spellCheck="false"
-          // autoCapitalize="none"
-          // autoSave="off"
-          // inputMode="text"
-        />
-
-        {/* button */}
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={handleSubmit}
-        >
-          Click Me
-        </button>
-
+      <main className="flex flex-col items-center justify-center w-full">
         {/* output from ai chat */}
         <div className="bg-gray-100 p-4 rounded-lg w-full max-w-md mt-4">
           {loading ? (
-            <p>Loading...</p>
+            <p className="text-black">Loading...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (
             <p className="text-black">{outputText}</p>
           )}
+        </div>
+        <div className="flex flex-row items-center justify-center w-full mt-4 gap-2">
+          <input
+            type="text"
+            placeholder="Type something..."
+            className="border border-gray-300 rounded-full w-full max-w-md p-0 my-4 p-3"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSubmit();
+              }
+            }}
+          />
+
+          {/* button */}
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-full font-black text-2xl "
+            onClick={handleSubmit}
+          >
+            {">"}
+          </button>
         </div>
       </main>
       <footer></footer>
