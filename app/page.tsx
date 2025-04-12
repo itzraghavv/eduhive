@@ -40,6 +40,9 @@ export default function Home() {
             },
           ],
           model: "llama-3.3-70b-versatile", // Specify the model
+          temperature: 0.7, // Specify the temperature
+          max_tokens: 1000, // Specify the maximum number of tokens
+          top_p: 1, // Specify the top_p value
         }),
       });
 
@@ -102,9 +105,7 @@ export default function Home() {
             <p className="text-black">Loading...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
-          ) : (
-            <p className="text-black">{outputText}</p>
-          )}
+          ) : null}
         </div>
         <div className="flex flex-row items-center justify-center w-full mt-4 gap-2">
           <input
