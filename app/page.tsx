@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { main } from "@/components/groq";
 // import { TextInput}
 
 // const api = process.env.GROQ_API_KEY;
@@ -13,11 +12,50 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const messages = [
+    {
+      role: "user",
+      content: inputText,
+    },
+  ];
+
   // print inpput query to console after saving it in inputText
   const handleSubmit = async () => {
-    console.log(inputText);
-    console.log(main);
-    // console.log(api);
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch("/api/groq", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: "user",
+              content: inputText, // Use the input from the user
+            },
+          ],
+          model: "llama-3.3-70b-versatile", // Specify the model
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch data from the server");
+      }
+
+      const data = await response.json();
+      setOutputText(data.choices[0]?.message?.content || "No response");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
+    } finally {
+      setLoading(false);
+    }
+
+    console.log("Input query:", inputText); // Log the input query
+    console.log("Output:", outputText); // Log the output
   };
 
   return (
@@ -54,7 +92,15 @@ export default function Home() {
         </button>
 
         {/* output from ai chat */}
-        <div className="bg-gray-100 p-4 rounded-lg w-full max-w-md mt-4"></div>
+        <div className="bg-gray-100 p-4 rounded-lg w-full max-w-md mt-4">
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <p className="text-black">{outputText}</p>
+          )}
+        </div>
       </main>
       <footer></footer>
     </div>
