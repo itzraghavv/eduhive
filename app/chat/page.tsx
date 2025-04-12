@@ -15,12 +15,6 @@ export default function ChatPage() {
     setLoading(true);
 
     try {
-
-      const apiMessages = [...messages, userMessage].map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }));
-
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
