@@ -12,15 +12,18 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const messages = [
+  const [messages, setMessages] = useState<
+    { role: "user" | "assistant"; content: string }[]
+  >([
     {
-      role: "user",
-      content: inputText,
+      role: "assistant",
+      content:
+        "Hello, I am Groq. How can I assist you today? Please enter your query.",
     },
-  ];
+  ]);
 
   // print inpput query to console after saving it in inputText
-  const handleSubmit = async () => {
+  const handleSubmit = async ({ input }: { input: string }) => {
     setLoading(true);
     setError("");
     try {
@@ -46,6 +49,21 @@ export default function Home() {
 
       const data = await response.json();
       setOutputText(data.choices[0]?.message?.content || "No response");
+      // messages.push({
+      //   role: "user",
+      //   content: input,
+      // });
+      // messages.push({
+      //   role: "assistant",
+      //   content: data.choices[0]?.message?.content || "No response",
+      // });
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: "user", content: inputText },
+        { role: "assistant", content: data.choices[0]?.message?.content || "" },
+      ]);
+
+      setInputText(""); // Clear the input field after submission
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An unknown error occurred"
@@ -61,6 +79,25 @@ export default function Home() {
       <main className="flex flex-col items-center justify-center w-full">
         {/* output from ai chat */}
         <div className="bg-gray-100 p-4 rounded-lg w-full max-w-md mt-4">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`flex ${
+                message.role === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`text-gray-500 p-2 rounded-lg ${
+                  message.role === "user"
+                    ? "rounded-bl-none"
+                    : "rounded-br-none"
+                }`}
+              >
+                {message.content}
+              </div>
+            </div>
+          ))}
+          {/* output from ai chat */}
           {loading ? (
             <p className="text-black">Loading...</p>
           ) : error ? (
@@ -73,12 +110,12 @@ export default function Home() {
           <input
             type="text"
             placeholder="Type something..."
-            className="border border-gray-300 rounded-full w-full max-w-md p-0 my-4 p-3"
+            className="border border-gray-300 rounded-full w-full max-w-md my-4 p-3"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleSubmit();
+                handleSubmit({ input: inputText });
               }
             }}
           />
@@ -86,7 +123,7 @@ export default function Home() {
           {/* button */}
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded-full font-black text-2xl "
-            onClick={handleSubmit}
+            onClick={() => handleSubmit({ input: inputText })}
           >
             {">"}
           </button>
