@@ -6,16 +6,11 @@ import { Input } from "./ui/input";
 import { ModelSelector } from "./model-selector";
 import { ModelType } from "@/types/model-types";
 
-<<<<<<< HEAD
-export const ChatInput = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
-=======
 interface ChatInputProps {
   selectedModel: ModelType;
   onModelChange: (model: ModelType) => void;
   onSendMessage: (message: string) => void;
 }
->>>>>>> 99a8f0e1e2e38086b785296f470871e4047de44d
 
 export const ChatInput = ({
   selectedModel,
@@ -38,18 +33,13 @@ export const ChatInput = ({
       <Input
         className="bg-white shadow-2xs focus-visible:ring-0 focus:border-none"
         placeholder="Ask AI..."
-<<<<<<< HEAD
-        onChange={() => {}}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handleClick();
-          }
-        }}
-        ref={inputRef}
-=======
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
->>>>>>> 99a8f0e1e2e38086b785296f470871e4047de44d
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            handleSubmit(e);
+          }
+        }}
       />
       <Button onClick={handleSubmit} className="hover:cursor-pointer">
         Send

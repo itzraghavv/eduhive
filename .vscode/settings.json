@@ -1,0 +1,13 @@
+{
+  "github.copilot.advanced": {
+    "enable": false,
+    "enableAutoComplete": false,
+    "enableInlineSuggestions": false,
+    "enableCodeCompletion": false,
+    "enableCodeActions": true,
+    "enableCodeLens": true,
+    "enableCodeRefactoring": true,
+    "enableCodeNavigation": true,
+    "enableCodeFormatting": true
+  }
+}

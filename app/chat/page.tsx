@@ -1,16 +1,16 @@
 "use client";
 
 import { ChatBox } from "@/components/chat-box";
-<<<<<<< HEAD
-=======
 import { ChatInput } from "@/components/chat-input";
 import { useState } from "react";
 import { ModelType } from "@/types/model-types";
->>>>>>> 99a8f0e1e2e38086b785296f470871e4047de44d
 
 export default function ChatPage() {
-  const [selectedModel, setSelectedModel] = useState<ModelType>("llama3-8b-8192");
-  const [messages, setMessages] = useState<{ role: "user" | "ai"; content: string }[]>([]);
+  const [selectedModel, setSelectedModel] =
+    useState<ModelType>("llama3-8b-8192");
+  const [messages, setMessages] = useState<
+    { role: "user" | "ai"; content: string }[]
+  >([]);
   const [loading, setLoading] = useState(false);
 
   const handleSendMessage = async (message: string) => {
@@ -24,7 +24,7 @@ export default function ChatPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          messages: [...messages, { role: "user", content: message }],
+          messages: [{ role: "user", content: message }],
           model: selectedModel,
         }),
       });
@@ -60,9 +60,6 @@ export default function ChatPage() {
         <div className="flex-1 overflow-y-auto bg-muted rounded-lg">
           <ChatBox messages={messages} loading={loading} />
         </div>
-<<<<<<< HEAD
-        <div className="border-t p-4"></div>
-=======
         <div className="p-4">
           <ChatInput
             selectedModel={selectedModel}
@@ -70,7 +67,6 @@ export default function ChatPage() {
             onSendMessage={handleSendMessage}
           />
         </div>
->>>>>>> 99a8f0e1e2e38086b785296f470871e4047de44d
       </div>
     </div>
   );
