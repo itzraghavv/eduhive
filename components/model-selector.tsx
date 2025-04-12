@@ -1,4 +1,4 @@
-import { SUPPORTED_MODELS } from "@/types/model-types";
+import { ModelType, SUPPORTED_MODELS } from "@/types/model-types";
 import {
   Select,
   SelectTrigger,
@@ -9,9 +9,20 @@ import {
   SelectLabel,
 } from "@/components/ui/select";
 
-export const ModelSelector = () => {
+interface ModelSelectorProps {
+  selectedModel: ModelType;
+  onChange: (model: ModelType) => void;
+}
+
+export const ModelSelector = ({
+  selectedModel,
+  onChange,
+}: ModelSelectorProps) => {
   return (
-    <Select>
+    <Select
+      value={selectedModel}
+      onValueChange={(val) => onChange(val as ModelType)}
+    >
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Select a Model" />
       </SelectTrigger>

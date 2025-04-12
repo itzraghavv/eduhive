@@ -27,7 +27,11 @@
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.2.0",
     "tw-animate-css": "^1.2.5",
+<<<<<<< HEAD
     "web-streams-polyfill": "^4.1.0"
+=======
+    "zod": "^3.24.2"
+>>>>>>> 99a8f0e1e2e38086b785296f470871e4047de44d
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

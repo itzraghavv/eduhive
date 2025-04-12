@@ -1,24 +1,44 @@
 "use client";
 
-import { useRef } from "react";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ModelSelector } from "./model-selector";
+import { ModelType } from "@/types/model-types";
 
+<<<<<<< HEAD
 export const ChatInput = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+=======
+interface ChatInputProps {
+  selectedModel: ModelType;
+  onModelChange: (model: ModelType) => void;
+  onSendMessage: (message: string) => void;
+}
+>>>>>>> 99a8f0e1e2e38086b785296f470871e4047de44d
 
-  const handleClick = () => {
-    const inputVal = inputRef.current?.value;
-    console.log(inputVal);
+export const ChatInput = ({
+  selectedModel,
+  onModelChange,
+  onSendMessage,
+}: ChatInputProps) => {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      onSendMessage(inputValue);
+      setInputValue("");
+    }
   };
 
   return (
     <div className="flex gap-x-2 p-4 my-4 bg-muted rounded-lg">
-      <ModelSelector />
+      <ModelSelector selectedModel={selectedModel} onChange={onModelChange} />
       <Input
         className="bg-white shadow-2xs focus-visible:ring-0 focus:border-none"
         placeholder="Ask AI..."
+<<<<<<< HEAD
         onChange={() => {}}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
@@ -26,8 +46,12 @@ export const ChatInput = () => {
           }
         }}
         ref={inputRef}
+=======
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+>>>>>>> 99a8f0e1e2e38086b785296f470871e4047de44d
       />
-      <Button onClick={handleClick} className="hover:cursor-pointer">
+      <Button onClick={handleSubmit} className="hover:cursor-pointer">
         Send
       </Button>
     </div>

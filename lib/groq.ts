@@ -1,23 +1,19 @@
-import type { ModelType } from "@/types/model-types";
+import Groq from "groq-sdk";
+
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY!,
+});
 
 export async function sendMessageToGroq(
   messages: { role: string; content: string }[],
-  model: ModelType
+  model: string
 ) {
-  const res = await fetch("https://api.groq.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-    }),
+  const response = await groq.chat.completions.create({
+    model,
+    messages,
   });
 
-  if (!res.ok) throw new Error("Groq API error");
+  console.log(response);
 
-  const data = await res.json();
-  return data.choices[0].message.content;
+  return response.choices[0]?.message?.content ?? "No response";
 }
