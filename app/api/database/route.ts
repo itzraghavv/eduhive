@@ -27,8 +27,8 @@ export async function POST(req: Request) {
     return NextResponse.json(newNote);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to create note" },
-      { status: 500 }
+      { error: "Failed to create note here" },
+      { status: 501 }
     );
   }
 }
