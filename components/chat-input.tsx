@@ -35,6 +35,12 @@ export const ChatInput = ({
         placeholder="Ask AI..."
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit(e);
+          }
+        }}
       />
       <Button onClick={handleSubmit} className="hover:cursor-pointer">
         Send
