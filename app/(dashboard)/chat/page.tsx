@@ -2,53 +2,11 @@
 
 import { ChatBox } from "@/components/chat-box";
 import { ChatInput } from "@/components/chat-input";
-import { useState } from "react";
-import { ModelType } from "@/types/model-types";
+import { useChat } from "@/hooks/use-chat";
 
 export default function ChatPage() {
-  const [selectedModel, setSelectedModel] =
-    useState<ModelType>("llama3-8b-8192");
-  const [messages, setMessages] = useState<
-    { role: "user" | "ai"; content: string }[]
-  >([]);
-  const [loading, setLoading] = useState(false);
-
-  const handleSendMessage = async (message: string) => {
-    setMessages((prev) => [...prev, { role: "user", content: message }]);
-    setLoading(true);
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messages: [...messages, { role: "user", content: message }],
-          model: selectedModel,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to get response from AI");
-      }
-
-      const data = await response.json();
-
-      setMessages((prev) => [...prev, { role: "ai", content: data.content }]);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "ai",
-          content: "Sorry, I encountered an error. Please try again.",
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { messages, loading, selectedModel, setSelectedModel, sendMessage } =
+    useChat();
 
   return (
     <div className="flex flex-col h-screen max-w-2xl mx-auto px-4 py-6">
@@ -64,7 +22,7 @@ export default function ChatPage() {
           <ChatInput
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
-            onSendMessage={handleSendMessage}
+            onSendMessage={sendMessage}
           />
         </div>
       </div>

@@ -13,7 +13,5 @@ export async function sendMessageToGroq(
     messages,
   });
 
-  console.log(response);
-
   return response.choices[0]?.message?.content ?? "No response";
 }

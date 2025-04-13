@@ -3,6 +3,10 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+// import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
+// import rehypeHighlight from "rehype-highlight"; // Syntax highlighting
+// import "highlight.js/styles/github.css";
 
 interface ChatBoxProps {
   messages: { role: "user" | "ai"; content: string }[];
@@ -23,11 +27,18 @@ export const ChatBox = ({ messages, loading }: ChatBoxProps) => {
           key={index}
           className={`max-w-[80%] ${
             message.role === "user"
-              ? "ml-auto bg-primary text-primary-foreground"
-              : "mr-auto"
+              ? "ml-auto bg-primary text-primary-foreground my-2 rounded-br-sm"
+              : "mr-auto rounded-bl-sm"
           }`}
         >
-          <CardContent className="px-3 text-sm">{message.content}</CardContent>
+          <CardContent className="px-3 text-sm">
+            <ReactMarkdown
+            // remarkPlugins={[remarkGfm]}
+            // rehypePlugins={[rehypeHighlight]}
+            >
+              {message.content}
+            </ReactMarkdown>
+          </CardContent>
         </Card>
       ))}
       <br />
