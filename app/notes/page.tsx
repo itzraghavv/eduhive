@@ -105,11 +105,13 @@ const NotesPage = () => {
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              handleSaveNote(); // Save the note on Enter
+              handleSaveNote({ title, description: desc }); // Save the note on Enter
             }
           }}
         ></Input>
-        <Button onClick={handleSaveNote}>Save Note</Button>
+        <Button onClick={() => handleSaveNote({ title, description: desc })}>
+          Save Note
+        </Button>
       </section>
     </main>
   );
