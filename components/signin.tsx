@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Button } from "./ui/button";
+import { SignInSchema } from "@/lib/validators";
 
 export const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +18,11 @@ export const SignIn = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    const data = SignInSchema.safeParse({ email, password });
+    if (!data.success) {
+      return setError(data.error.format()._errors[0]);
+    }
 
     try {
       const res = await signIn("credentials", {
