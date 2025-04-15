@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -73,6 +74,12 @@ export const SignIn = () => {
         >
           {loading ? "Signing in..." : "Sign In"}
         </Button>
+        <Link
+          href="/signup"
+          className="flex-1 w-full flex p-2 justify-end text-gray-500"
+        >
+          Create a new account?
+        </Link>
       </form>
     </div>
   );

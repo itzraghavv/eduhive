@@ -60,7 +60,7 @@ const NotesPage = () => {
   }
 
   return (
-    <main className="flex-1 items-center content-center">
+    <div className="flex-1 items-center content-center">
       <section className="flex-1 w-full flex items-center justify-center">
         <h1 className="text-2xl font-black">Notes Page</h1>
       </section>
@@ -121,7 +121,7 @@ const NotesPage = () => {
             ))}
         </CardContent>
       )}
-    </main>
+    </div>
   );
 };
 
