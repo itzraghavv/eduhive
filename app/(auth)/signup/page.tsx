@@ -1,7 +1,11 @@
-export const SignUpPage = () => {
-    return (
-        <div>
-            Sign up
-        </div>
-    )
-}
+import { SignUp } from "@/components/signup";
+
+const SignUpPage = () => {
+  return (
+    <div>
+      <SignUp />
+    </div>
+  );
+};
+
+export default SignUpPage;
