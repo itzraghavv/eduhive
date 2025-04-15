@@ -10,9 +10,23 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
+import { Edit, Trash2 } from "lucide-react";
 
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { NoResponse } from "@/components/auth";
+import { handleDeleteNote } from "@/components/notes-functions";
+
+// Extend the Session type to include the user id
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id?: string;
+      name?: string | null;
+      email?: string | null;
+    };
+  }
+}
 
 const NotesPage = () => {
   const [title, setTitle] = useState("");
@@ -21,11 +35,19 @@ const NotesPage = () => {
     useDB();
 
   const { data: session } = useSession();
+  console.log("SEssions :", session);
+  const currentUserId = session?.user?.id;
+
+  console.log("ID : ", currentUserId);
 
   // for enter key press moving
   const descInputRef = useRef<HTMLInputElement>(null);
 
   const saveNote = async () => {
+    if (!currentUserId) {
+      alert("No user");
+      return;
+    }
     if (!title || !desc) {
       alert("Enter From Inputs First to proceed");
       return;
@@ -34,29 +56,52 @@ const NotesPage = () => {
     await handleSaveNote({
       title: title.trim(),
       description: desc.trim(),
-      userId: "3edb8deb-4e29-41a1-bfb5-199e10095dc1",
+      userId: currentUserId,
     });
     setTitle("");
     setDesc("");
-    fetchNotes("3edb8deb-4e29-41a1-bfb5-199e10095dc1");
+    fetchNotes(currentUserId);
   };
 
+  // const handleDeleteNote = async (noteId: string) => {
+  //   if (!currentUserId) {
+  //     alert("No user");
+  //     return;
+  //   }
+
+  //   const confirmed = window.confirm(
+  //     "Are you sure you want to delete this note?"
+  //   );
+  //   if (!confirmed) return;
+
+  //   try {
+  //     const response = await fetch("/api/database", {
+  //       method: "DELETE",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ id: noteId }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to delete note");
+  //     }
+
+  //     fetchNotes(currentUserId);
+  //   } catch (e) {
+  //     console.log("Error deleting note", e);
+  //     alert("Failed to delete note");
+  //   }
+  // };
+
   useEffect(() => {
-    fetchNotes("3edb8deb-4e29-41a1-bfb5-199e10095dc1");
-  }, []);
+    if (currentUserId) {
+      fetchNotes(currentUserId);
+    }
+  }, [currentUserId]);
 
   if (!session) {
-    return (
-      <div className="flex flex-col h-screen max-w-2xl mx-auto px-4 py-6 items-center justify-center text-center">
-        <h1 className="text-2xl font-bold mb-4">Please login to continue</h1>
-        <p className="text-muted-foreground">
-          You need to be logged in to access this page.
-        </p>
-        <Button className="mt-4">
-          <Link href="/signin">Sign In</Link>
-        </Button>
-      </div>
-    );
+    return <NoResponse />;
   }
 
   return (
@@ -114,8 +159,20 @@ const NotesPage = () => {
                   <CardDescription>{note.description}</CardDescription>
                 </section>
                 <section className="flex flex-wrap gap-2">
-                  <Button>Edit</Button>
-                  <Button>Delete</Button>
+                  <Button>
+                    <Edit />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (currentUserId) {
+                        handleDeleteNote(note.id, currentUserId);
+                      } else {
+                        alert("User ID is undefined");
+                      }
+                    }}
+                  >
+                    <Trash2 />
+                  </Button>
                 </section>
               </Card>
             ))}

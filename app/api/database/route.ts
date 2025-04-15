@@ -3,7 +3,7 @@ import {
   createNote,
   deleteNote,
   updateNote,
-} from "@/components/notes-function";
+} from "@/components/crud-notes-function";
 import { NextResponse } from "next/server";
 
 // Fetch all notes
@@ -71,6 +71,11 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const { id } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ error: "Missing note ID" }, { status: 400 });
+    }
+
     const deletedNote = await deleteNote({ id });
     return NextResponse.json(deletedNote);
   } catch (error) {

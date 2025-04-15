@@ -12,6 +12,8 @@ import {
 import Link from "next/link";
 import clsx from "clsx";
 
+import { useSession } from "next-auth/react";
+
 const navItems = [
   // TODO - change the href to something other than home, currently set to chat
   { icon: Home, label: "Home", href: "/chat" },
@@ -24,6 +26,9 @@ const navItems = [
 
 export default function Sidebar() {
   const [isHovered, setIsHovered] = useState(false);
+
+  const { data: session } = useSession();
+  const currentUserId = session?.user?.id;
 
   return (
     <div
@@ -54,6 +59,7 @@ export default function Sidebar() {
             </span>
           </Link>
         ))}
+        {/* {currentUserId && <p className="text-3xl text-blue-800">Y</p>} */}
       </div>
     </div>
   );

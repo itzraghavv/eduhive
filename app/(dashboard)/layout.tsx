@@ -3,8 +3,12 @@
 import Navbar from "@/components/navbar";
 import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
+import { useSession } from "next-auth/react";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
+  // const { data: session } = useSession();
+  // const currentUserId = session?.user?.id;
+
   return (
     <SessionProvider>
       <Navbar />
