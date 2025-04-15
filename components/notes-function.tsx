@@ -2,8 +2,9 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const fetchNotes = async () => {
+const fetchNotes = async (userId: string) => {
   const data = await prisma.note.findMany({
+    where: { userId },
     select: {
       id: true,
       title: true,

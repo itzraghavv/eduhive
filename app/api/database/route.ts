@@ -7,11 +7,22 @@ import {
 import { NextResponse } from "next/server";
 
 // Fetch all notes
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const notes = await fetchNotes();
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Missing userId paramater" },
+        { status: 400 }
+      );
+    }
+
+    const notes = await fetchNotes(userId);
     return NextResponse.json(notes);
-  } catch (error) {
+  } catch (e) {
+    console.log("Failed to fetch Notes : ", e);
     return NextResponse.json(
       { error: "Failed to fetch notes" },
       { status: 500 }
@@ -23,12 +34,21 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const { title, description, userId } = await req.json();
+
+    // Validate input
+    if (!title || !description || !userId) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 402 }
+      );
+    }
+
     const newNote = await createNote({ title, description, userId });
     return NextResponse.json(newNote);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to create note here" },
-      { status: 501 }
+      { status: 500 }
     );
   }
 }
