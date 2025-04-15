@@ -9,7 +9,7 @@ import ReactMarkdown from "react-markdown";
 // import "highlight.js/styles/github.css";
 
 interface ChatBoxProps {
-  messages: { role: "user" | "ai"; content: string }[];
+  messages: { role: "user" | "ai" | "assistant"; content: string }[];
   loading: boolean;
 }
 

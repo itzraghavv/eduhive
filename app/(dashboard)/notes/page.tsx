@@ -11,11 +11,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+
 const NotesPage = () => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const { notes, loading, fetchLoading, error, handleSaveNote, fetchNotes } =
     useDB();
+
+  const { data: session } = useSession();
 
   // for enter key press moving
   const descInputRef = useRef<HTMLInputElement>(null);
@@ -39,6 +44,20 @@ const NotesPage = () => {
   useEffect(() => {
     fetchNotes("3edb8deb-4e29-41a1-bfb5-199e10095dc1");
   }, []);
+
+  if (!session) {
+    return (
+      <div className="flex flex-col h-screen max-w-2xl mx-auto px-4 py-6 items-center justify-center text-center">
+        <h1 className="text-2xl font-bold mb-4">Please login to continue</h1>
+        <p className="text-muted-foreground">
+          You need to be logged in to access this page.
+        </p>
+        <Button className="mt-4">
+          <Link href="/signin">Sign In</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <main className="flex-1 items-center content-center">
