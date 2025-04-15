@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Button } from "./ui/button";
+import Link from "next/link";
 import { SignInSchema } from "@/lib/validators";
 
 export const SignIn = () => {
@@ -20,7 +21,9 @@ export const SignIn = () => {
     setError("");
 
     const data = SignInSchema.safeParse({ email, password });
+
     if (!data.success) {
+      console.log(data.error);
       return setError(data.error.format()._errors[0]);
     }
 
@@ -79,6 +82,12 @@ export const SignIn = () => {
         >
           {loading ? "Signing in..." : "Sign In"}
         </Button>
+        <Link
+          href="/signup"
+          className="flex-1 w-full flex p-2 justify-end text-gray-500"
+        >
+          Create a new account?
+        </Link>
       </form>
     </div>
   );

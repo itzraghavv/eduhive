@@ -25,7 +25,7 @@ export function useDB() {
       console.log("Failed to fetch Notes from DB : ", e);
       setError(e.response?.data?.error || "An Unexpected Error Occurred");
     } finally {
-      setLoading(false);
+      setFetchLoading(false);
     }
   };
 
@@ -75,7 +75,7 @@ export function useDB() {
     // setDesc,
     loading,
     error,
-    setFetchLoading,
+    fetchLoading,
 
     fetchNotes,
     handleSaveNote,

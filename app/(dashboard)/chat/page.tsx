@@ -33,9 +33,14 @@ export default function ChatPage() {
         <p className="text-muted-foreground">
           You need to be logged in to access this page.
         </p>
-        <Button className="mt-4">
-          <Link href="/signin">Sign In</Link>
-        </Button>
+        <div className="flex flex-row gap-2 mt-2 p-4">
+          <Button className="mt-4">
+            <Link href="/signin">Sign In</Link>
+          </Button>
+          <Button className="mt-4">
+            <Link href="/signup">Sign Up</Link>
+          </Button>
+        </div>
       </div>
     );
   }

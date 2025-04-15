@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { SignUpSchema } from "@/lib/validators";
+import { signIn } from "next-auth/react";
 
 export const SignUp = () => {
   const [username, setUsername] = useState("");
@@ -28,9 +30,27 @@ export const SignUp = () => {
 
       const data = await res.json();
 
+      const validData = SignUpSchema.safeParse({ username, email, password });
+
+      if (!validData.success) {
+        console.log(validData.error);
+        setMessage("Invalid Input");
+        setLoading(false);
+        return;
+      }
+
       if (res.ok) {
-        setMessage("Signup successful! You can now sign in.");
-        router.push("/chat");
+        const loginRes = await signIn("credentials", {
+          redirect: false,
+          username: email,
+          password,
+        });
+
+        if (loginRes?.ok) {
+          router.push("/chat");
+        } else {
+          setMessage("Signed up but failed to sign in.");
+        }
       } else {
         setMessage(data.error || "Something went wrong.");
       }
