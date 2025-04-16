@@ -1,4 +1,4 @@
-import { fetchNotes } from "./crud-notes-function";
+// import { fetchNotes } from "./crud-notes-function";
 
 export const handleDeleteNote = async (
   noteId: string,
@@ -27,7 +27,7 @@ export const handleDeleteNote = async (
       throw new Error("Failed to delete note");
     }
 
-    fetchNotes(currentUserId);
+    // fetchNotes(currentUserId);
   } catch (e) {
     console.log("Error deleting note", e);
     alert("Failed to delete note");

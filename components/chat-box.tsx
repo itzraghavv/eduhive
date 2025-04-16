@@ -4,7 +4,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
-// import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
+import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
+import remarkBreaks from "remark-breaks";
+
 // import rehypeHighlight from "rehype-highlight"; // Syntax highlighting
 // import "highlight.js/styles/github.css";
 
@@ -33,8 +35,8 @@ export const ChatBox = ({ messages, loading }: ChatBoxProps) => {
         >
           <CardContent className="px-3 text-sm">
             <ReactMarkdown
-            // remarkPlugins={[remarkGfm]}
-            // rehypePlugins={[rehypeHighlight]}
+              remarkPlugins={[remarkGfm, remarkBreaks]}
+              // rehypePlugins={[rehypeHighlight]}
             >
               {message.content}
             </ReactMarkdown>

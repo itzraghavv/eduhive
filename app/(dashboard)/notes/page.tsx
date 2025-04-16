@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Input } from "@/components/ui/input";
+import { TextArea } from "@/components/ui/input";
 import { useDB } from "@/hooks/use-db";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +16,9 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { NoResponse } from "@/components/auth";
 import { handleDeleteNote } from "@/components/notes-functions";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
+import remarkBreaks from "remark-breaks";
 
 // Extend the Session type to include the user id
 declare module "next-auth" {
@@ -41,7 +44,7 @@ const NotesPage = () => {
   console.log("ID : ", currentUserId);
 
   // for enter key press moving
-  const descInputRef = useRef<HTMLInputElement>(null);
+  const descInputRef = useRef<HTMLTextAreaElement>(null);
 
   const saveNote = async () => {
     if (!currentUserId) {
@@ -58,8 +61,15 @@ const NotesPage = () => {
       description: desc.trim(),
       userId: currentUserId,
     });
+
     setTitle("");
     setDesc("");
+
+    // Reset the height of the description textarea
+    if (descInputRef.current) {
+      descInputRef.current.style.height = "auto";
+    }
+
     fetchNotes(currentUserId);
   };
 
@@ -111,7 +121,7 @@ const NotesPage = () => {
       </section>
       <section className="flex w-full items-center justify-center flex-col">
         <h2>Name:</h2>
-        <Input
+        <TextArea
           className="bg-white shadow-2xs focus-visible:ring-0 focus:border-none max-w-[80%]"
           placeholder="New Note..."
           value={title}
@@ -124,21 +134,27 @@ const NotesPage = () => {
               descInputRef.current?.focus();
             }
           }}
-        ></Input>
+        ></TextArea>
         <h2>Details:</h2>
-        <Input
+        <TextArea
           ref={descInputRef}
           className="bg-white shadow-2xs focus-visible:ring-0 focus:border-none max-w-[80%]"
           placeholder="I am studying..."
           value={desc}
-          onChange={(e) => setDesc(e.target.value)}
+          onChange={(e) => {
+            setDesc(e.target.value);
+
+            const target = e.target as HTMLTextAreaElement;
+            target.style.height = "auto";
+            target.style.height = `${target.scrollHeight}px`;
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
               saveNote();
             }
           }}
-        ></Input>
+        ></TextArea>
         <Button onClick={saveNote} disabled={loading}>
           {loading ? "Saving..." : "Save Note"}
         </Button>
@@ -156,16 +172,21 @@ const NotesPage = () => {
               >
                 <section className="flex flex-col flex-wrap">
                   <CardTitle>{note.title}</CardTitle>
-                  <CardDescription>{note.description}</CardDescription>
+                  <CardDescription className="whitespace-pre-wrap break-words">
+                    <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                      {note.description}
+                    </ReactMarkdown>
+                  </CardDescription>
                 </section>
                 <section className="flex flex-wrap gap-2">
-                  <Button>
-                    <Edit />
-                  </Button>
+                  {/* <Button> */}
+                  {/* <Edit /> */}
+                  {/* </Button> */}
                   <Button
                     onClick={() => {
                       if (currentUserId) {
                         handleDeleteNote(note.id, currentUserId);
+                        fetchNotes(currentUserId);
                       } else {
                         alert("User ID is undefined");
                       }
