@@ -1,11 +1,20 @@
 import { hash } from "bcrypt";
 import prisma from "@/lib/prisma";
+import { SignUpSchema } from "@/lib/validators";
 
 const prismaClient = prisma;
 export async function POST(req: Request) {
   const { username, email, password } = await req.json();
 
-  const existingUser = await prismaClient.user.findUnique({
+  const data = SignUpSchema.safeParse({ username, email, password });
+
+  if (!data.success) {
+    return new Response(JSON.stringify({ error: data.error.issues }), {
+      status: 400,
+    });
+  }
+
+  const existingUser = await prismaClient.user.findFirst({
     where: { email },
   });
 
@@ -25,7 +34,7 @@ export async function POST(req: Request) {
     },
   });
 
-  return new Response(JSON.stringify({ message: "User created", user }), {
+  return new Response(JSON.stringify({ message: "User created" }), {
     status: 200,
   });
 }

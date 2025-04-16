@@ -19,6 +19,7 @@ import { handleDeleteNote } from "@/components/notes-functions";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
 import remarkBreaks from "remark-breaks";
+import { Loader2 } from "lucide-react";
 
 // Extend the Session type to include the user id
 declare module "next-auth" {
@@ -37,7 +38,7 @@ const NotesPage = () => {
   const { notes, loading, fetchLoading, error, handleSaveNote, fetchNotes } =
     useDB();
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   console.log("SEssions :", session);
   const currentUserId = session?.user?.id;
 
@@ -109,6 +110,19 @@ const NotesPage = () => {
       fetchNotes(currentUserId);
     }
   }, [currentUserId]);
+
+  if (status === "loading") {
+    return (
+      <div className="flex flex-col h-screen max-w-2xl mx-auto px-4 py-6 items-center justify-center text-center">
+        <h1 className="text-2xl font-bold mb-4">Loading...</h1>
+        <Loader2 className="animate-spin" />
+        <p className="text-muted-foreground">
+          Please wait while we load your notes.
+        </p>
+        <div className="loader mt-4"></div>
+      </div>
+    );
+  }
 
   if (!session) {
     return <NoResponse />;
