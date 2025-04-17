@@ -16,10 +16,14 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { NoResponse } from "@/components/auth";
 import { handleDeleteNote } from "@/components/notes-functions";
+import { Loader2 } from "lucide-react";
+
+// FONT STYLE / MARKDOWN IMPORTS
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
 import remarkBreaks from "remark-breaks";
-import { Loader2 } from "lucide-react";
+import rehypeHighlight from "rehype-highlight";
+// import "highlight.js/styles/github-dark.css";
 
 // Extend the Session type to include the user id
 declare module "next-auth" {
@@ -30,6 +34,13 @@ declare module "next-auth" {
       email?: string | null;
     };
   }
+}
+
+interface DeleteButtonProps {
+  id: string;
+  currentUserId: string | undefined;
+  fetchNotes: (userId: string) => void;
+  handleDeleteNote: (id: string, userId: string) => void;
 }
 
 const NotesPage = () => {
@@ -74,36 +85,27 @@ const NotesPage = () => {
     fetchNotes(currentUserId);
   };
 
-  // const handleDeleteNote = async (noteId: string) => {
-  //   if (!currentUserId) {
-  //     alert("No user");
-  //     return;
-  //   }
-
-  //   const confirmed = window.confirm(
-  //     "Are you sure you want to delete this note?"
-  //   );
-  //   if (!confirmed) return;
-
-  //   try {
-  //     const response = await fetch("/api/database", {
-  //       method: "DELETE",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ id: noteId }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to delete note");
-  //     }
-
-  //     fetchNotes(currentUserId);
-  //   } catch (e) {
-  //     console.log("Error deleting note", e);
-  //     alert("Failed to delete note");
-  //   }
-  // };
+  const DeleteButton: React.FC<DeleteButtonProps> = ({
+    id,
+    currentUserId,
+    fetchNotes,
+    handleDeleteNote,
+  }) => {
+    return (
+      <Button
+        onClick={() => {
+          if (currentUserId) {
+            handleDeleteNote(id, currentUserId);
+            fetchNotes(currentUserId);
+          } else {
+            alert("User ID is undefined");
+          }
+        }}
+      >
+        <Trash2 />
+      </Button>
+    );
+  };
 
   useEffect(() => {
     if (currentUserId) {
@@ -129,15 +131,23 @@ const NotesPage = () => {
   }
 
   return (
-    <div className="flex-1 items-center content-center">
-      <section className="flex-1 w-full flex items-center justify-center">
-        <h1 className="text-2xl font-black">Notes Page</h1>
+    <div className="flex-1 flex flex-col items-center justify-center px-4 py-6">
+      {/* Headings */}
+      <section className="w-full max-w-2xl text-center mb-6">
+        <h1 className="text-3xl font-extrabold text-primary mb-4">
+          Notes Page
+        </h1>
+        <p className="text-muted-foreground">
+          Create, view, and manage your notes with ease.
+        </p>
       </section>
-      <section className="flex w-full items-center justify-center flex-col">
-        <h2>Name:</h2>
+
+      {/* Notes Creating Form */}
+      <section className="w-full max-w-2xl bg-white shadow-md rounded-lg p-6 mb-6">
+        <h2 className="text-lg font-normal text-black mb-2">Title:</h2>
         <TextArea
-          className="bg-white shadow-2xs focus-visible:ring-0 focus:border-none max-w-[80%]"
-          placeholder="New Note..."
+          className="bg-white shadow-2xs focus-visible:ring-0 focus:border-2 rounded-md w-full mb-4"
+          placeholder="Enter the title of your note..."
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
@@ -149,11 +159,12 @@ const NotesPage = () => {
             }
           }}
         ></TextArea>
-        <h2>Details:</h2>
+
+        <h2 className="text-lg font-normal text-black mb-2">Details:</h2>
         <TextArea
           ref={descInputRef}
-          className="bg-white shadow-2xs focus-visible:ring-0 focus:border-none max-w-[80%]"
-          placeholder="I am studying..."
+          className="bg-white shadow-2xs focus-visible:ring-0 focus:border-2 rounded-md w-full mb-4"
+          placeholder="Enter the details of your note..."
           value={desc}
           onChange={(e) => {
             setDesc(e.target.value);
@@ -169,15 +180,20 @@ const NotesPage = () => {
             }
           }}
         ></TextArea>
-        <Button onClick={saveNote} disabled={loading}>
+        <Button
+          onClick={saveNote}
+          disabled={loading}
+          className="w-full bg-primary text-white hover:bg-primary-dark"
+        >
           {loading ? "Saving..." : "Save Note"}
         </Button>
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </section>
+
       {fetchLoading ? (
-        "Retrieving Your Data..."
+        <p className="text-muted-foreground">Retrieving Your Data...</p>
       ) : (
-        <CardContent className="flex flex-col gap-4 ">
+        <CardContent className="w-full max-w-2xl flex flex-col gap-4">
           {notes.length > 0 &&
             notes.map((note) => (
               <Card
@@ -186,8 +202,11 @@ const NotesPage = () => {
               >
                 <section className="flex flex-col flex-wrap">
                   <CardTitle>{note.title}</CardTitle>
-                  <CardDescription className="whitespace-pre-wrap break-words">
-                    <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                  <CardDescription className="whitespace-pre-wrap break-words mine-markdown">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm, remarkBreaks]}
+                      rehypePlugins={[rehypeHighlight]}
+                    >
                       {note.description}
                     </ReactMarkdown>
                   </CardDescription>
@@ -196,24 +215,86 @@ const NotesPage = () => {
                   {/* <Button> */}
                   {/* <Edit /> */}
                   {/* </Button> */}
-                  <Button
-                    onClick={() => {
-                      if (currentUserId) {
-                        handleDeleteNote(note.id, currentUserId);
-                        fetchNotes(currentUserId);
-                      } else {
-                        alert("User ID is undefined");
-                      }
-                    }}
-                  >
-                    <Trash2 />
-                  </Button>
+                  <DeleteButton
+                    id={note.id}
+                    currentUserId={currentUserId}
+                    fetchNotes={fetchNotes}
+                    handleDeleteNote={handleDeleteNote}
+                  />
                 </section>
               </Card>
             ))}
         </CardContent>
       )}
     </div>
+    // <div className="flex flex-col items-center justify-center px-4 py-6">
+    //   <section className="w-full max-w-2xl text-center mb-6">
+    //     <h1 className="text-3xl font-extrabold text-primary mb-4">
+    //       Notes Page
+    //     </h1>
+    //     <p className="text-muted-foreground">
+    //       Create, view, and manage your notes with ease.
+    //     </p>
+    //   </section>
+
+    //   <section className="w-full max-w-2xl bg-white shadow-md rounded-lg p-6 mb-6">
+    //     <h2 className="text-lg font-semibold text-secondary mb-2">Title:</h2>
+    //     <TextArea
+    //       className="bg-gray-100 shadow-sm focus:ring-2 focus:ring-primary focus:border-primary rounded-md w-full mb-4"
+    //       placeholder="Enter the title of your note..."
+    //     />
+
+    //     <h2 className="text-lg font-semibold text-secondary mb-2">Details:</h2>
+    //     <TextArea
+    //       className="bg-gray-100 shadow-sm focus:ring-2 focus:ring-primary focus:border-primary rounded-md w-full mb-4"
+    //       placeholder="Enter the details of your note...""
+    //     />
+    //
+    //   </section>
+
+    // TODO
+    //   {fetchLoading ? (
+    //     <p className="text-muted-foreground">Retrieving Your Data...</p>
+    //   ) : (
+    //     <CardContent className="w-full max-w-2xl flex flex-col gap-4">
+    //       {notes.length > 0 ? (
+    //         notes.map((note) => (
+    //           <Card
+    //             key={note.id}
+    //             className="p-4 shadow-sm rounded-lg border border-gray-200"
+    //           >
+    //             <section className="flex flex-col">
+    //               <CardTitle className="text-lg font-bold text-primary">
+    //                 {note.title}
+    //               </CardTitle>
+    //               <CardDescription className="whitespace-pre-wrap break-words text-muted-foreground">
+    //                 <ReactMarkdown
+    //                   remarkPlugins={[remarkGfm, remarkBreaks]}
+    //                   rehypePlugins={[rehypeHighlight]}
+    //                 >
+    //                   {note.description}
+    //                 </ReactMarkdown>
+    //               </CardDescription>
+    //             </section>
+    //             <section className="flex justify-end mt-4">
+    //               <Button
+    //                 onClick={() => handleDeleteNote(note.id, currentUserId)}
+    //                 className="bg-red-500 text-white hover:bg-red-600"
+    //               >
+    //                 <Trash2 className="mr-2" />
+    //                 Delete
+    //               </Button>
+    //             </section>
+    //           </Card>
+    //         ))
+    //       ) : (
+    //         <p className="text-muted-foreground text-center">
+    //           No notes available. Start by creating a new note!
+    //         </p>
+    //       )}
+    //     </CardContent>
+    //   )}
+    // </div>
   );
 };
 
