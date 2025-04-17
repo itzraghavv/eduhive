@@ -1,5 +1,5 @@
 import z from "zod";
-import { SUPPORTED_MODELS } from "./model-types";
+import { SUPPORTED_CHAT_MODELS } from "./model-types";
 
 export const MessageSchema = z.object({
   role: z.enum(["user", "ai"]),
@@ -8,5 +8,5 @@ export const MessageSchema = z.object({
 
 export const SendMessageToGroqSchema = z.object({
   messages: z.array(MessageSchema).min(1),
-  model: z.enum(SUPPORTED_MODELS),
+  model: z.enum(SUPPORTED_CHAT_MODELS),
 });

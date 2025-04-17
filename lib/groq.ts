@@ -15,3 +15,14 @@ export async function sendMessageToGroq(
 
   return response.choices[0]?.message?.content ?? "No response";
 }
+
+export async function sendTranscriptionToGroq(
+  transcription: string,
+  model: string
+) {
+  const response = await groq.audio.transcriptions.create({
+    model: "whisper-large-v3-turbo",
+  });
+
+  return response.choices[0]?.message?.content ?? "No response";
+}

@@ -5,6 +5,8 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ModelSelector } from "./model-selector";
 import { ModelType } from "@/types/model-types";
+import { Mic } from "lucide-react";
+import { VoiceChat } from "./voice-chat";
 
 interface ChatInputProps {
   selectedModel: ModelType;
@@ -42,6 +44,9 @@ export const ChatInput = ({
           }
         }}
       />
+      <div className="flex items-center justify-center">
+        <VoiceChat />
+      </div>
       <Button onClick={handleSubmit} className="hover:cursor-pointer">
         Send
       </Button>
