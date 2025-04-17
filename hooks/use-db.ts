@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "sonner";
 
 interface Note {
   id: string;
@@ -9,8 +10,6 @@ interface Note {
 
 export function useDB() {
   const [notes, setNotes] = useState<Note[]>([]);
-  //   const [title, setTitle] = useState("");
-  //   const [desc, setDesc] = useState("");
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +21,9 @@ export function useDB() {
       const response = await axios.get(`/api/database?userId=${userId}`);
       setNotes(response.data);
     } catch (e: any) {
-      console.log("Failed to fetch Notes from DB : ", e);
+      toast.error("Failed to fetch notes. Please try again.", {
+        description: e,
+      });
       setError(e.response?.data?.error || "An Unexpected Error Occurred");
     } finally {
       setFetchLoading(false);
@@ -55,12 +56,14 @@ export function useDB() {
       if (response.ok) {
         const newNote = await response.json();
         setNotes((prevNotes) => [...prevNotes, newNote]);
-        // setTitle("");
-        // setDesc("");
+        toast.success("Note saved successfully!");
       }
     } catch (e: any) {
       console.error("Failed to save note:", e);
       setError(e.response?.data?.error || "An unexpected error occurred");
+      toast.error("Failed to save note. Please try again.", {
+        description: e,
+      });
     } finally {
       setLoading(false);
     }
@@ -87,9 +90,10 @@ export function useDB() {
       if (!response.ok) {
         throw new Error("Failed to delete note");
       }
+      toast.success("Note deleted successfully!");
     } catch (e) {
       console.log("Error deleting note", e);
-      alert("Failed to delete note");
+      toast.error("Failed to delete note. Please try again.");
     }
   };
 
