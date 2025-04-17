@@ -1,4 +1,4 @@
-import { ModelType, SUPPORTED_MODELS } from "@/types/model-types";
+import { ModelType, SUPPORTED_CHAT_MODELS } from "@/types/model-types";
 import {
   Select,
   SelectTrigger,
@@ -29,7 +29,7 @@ export const ModelSelector = ({
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Models</SelectLabel>
-          {SUPPORTED_MODELS.map((model, index) => (
+          {SUPPORTED_CHAT_MODELS.map((model, index) => (
             <SelectItem key={index} value={model}>
               {model}
             </SelectItem>
