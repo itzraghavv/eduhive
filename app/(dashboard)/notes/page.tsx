@@ -133,7 +133,7 @@ const NotesPage = () => {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-4 py-6">
       {/* Headings */}
-      <section className="w-full max-w-2xl text-center mb-6">
+      <section className="w-full max-w-3xl text-center mb-6">
         <h1 className="text-3xl font-extrabold text-primary mb-4">
           Notes Page
         </h1>
@@ -143,8 +143,10 @@ const NotesPage = () => {
       </section>
 
       {/* Notes Creating Form */}
-      <section className="w-full max-w-2xl bg-white shadow-md rounded-lg p-6 mb-6">
-        <h2 className="text-lg font-normal text-black mb-2">Title:</h2>
+      <section className="w-full max-w-3xl shadow-md rounded-lg p-6 mb-6 box-border">
+        <h2 className="text-lg text-muted-foreground font-semibold mb-2">
+          Title:
+        </h2>
         <TextArea
           className="bg-white shadow-2xs focus-visible:ring-0 focus:border-2 rounded-md w-full mb-4"
           placeholder="Enter the title of your note..."
@@ -160,7 +162,9 @@ const NotesPage = () => {
           }}
         ></TextArea>
 
-        <h2 className="text-lg font-normal text-black mb-2">Details:</h2>
+        <h2 className="text-lg mb-2 font-semibold text-muted-foreground">
+          Description:
+        </h2>
         <TextArea
           ref={descInputRef}
           className="bg-white shadow-2xs focus-visible:ring-0 focus:border-2 rounded-md w-full mb-4"
@@ -183,7 +187,7 @@ const NotesPage = () => {
         <Button
           onClick={saveNote}
           disabled={loading}
-          className="w-full bg-primary text-white hover:bg-primary-dark"
+          className="bg-primary text-white hover:bg-primary-dark w-full"
         >
           {loading ? "Saving..." : "Save Note"}
         </Button>
@@ -191,18 +195,28 @@ const NotesPage = () => {
       </section>
 
       {fetchLoading ? (
-        <p className="text-muted-foreground">Retrieving Your Data...</p>
+        <p className="text-muted-foreground w-full max-w-3xl">
+          Retrieving Your Data...
+        </p>
       ) : (
-        <CardContent className="w-full max-w-2xl flex flex-col gap-4">
-          {notes.length > 0 &&
+        <CardContent className="box-border w-full max-w-3xl flex flex-col m-0 px-0 py-6 ">
+          {notes.length > 0 ? (
             notes.map((note) => (
               <Card
                 key={note.id}
-                className="p-4 gap-4 flex-row items-stretch justify-between"
+                className="p-4 flex-1 flex-row items-stretch justify-between shadow-sm rounded-lg w-full m-0 box-border mb-4"
               >
-                <section className="flex flex-col flex-wrap">
-                  <CardTitle>{note.title}</CardTitle>
-                  <CardDescription className="whitespace-pre-wrap break-words mine-markdown">
+                <section className="flex flex-col w-full">
+                  <CardTitle className="text-lg font-bold text-primary flex w-full items-stretch justify-between">
+                    {note.title}
+                    <DeleteButton
+                      id={note.id}
+                      currentUserId={currentUserId}
+                      fetchNotes={fetchNotes}
+                      handleDeleteNote={handleDeleteNote}
+                    />
+                  </CardTitle>
+                  <CardDescription className="whitespace-pre-wrap break-words mine-markdown text-muted-foreground p-4">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm, remarkBreaks]}
                       rehypePlugins={[rehypeHighlight]}
@@ -215,86 +229,17 @@ const NotesPage = () => {
                   {/* <Button> */}
                   {/* <Edit /> */}
                   {/* </Button> */}
-                  <DeleteButton
-                    id={note.id}
-                    currentUserId={currentUserId}
-                    fetchNotes={fetchNotes}
-                    handleDeleteNote={handleDeleteNote}
-                  />
                 </section>
               </Card>
-            ))}
+            ))
+          ) : (
+            <p className="text-muted-foreground text-center">
+              No notes available. Start by creating a new note!
+            </p>
+          )}
         </CardContent>
       )}
     </div>
-    // <div className="flex flex-col items-center justify-center px-4 py-6">
-    //   <section className="w-full max-w-2xl text-center mb-6">
-    //     <h1 className="text-3xl font-extrabold text-primary mb-4">
-    //       Notes Page
-    //     </h1>
-    //     <p className="text-muted-foreground">
-    //       Create, view, and manage your notes with ease.
-    //     </p>
-    //   </section>
-
-    //   <section className="w-full max-w-2xl bg-white shadow-md rounded-lg p-6 mb-6">
-    //     <h2 className="text-lg font-semibold text-secondary mb-2">Title:</h2>
-    //     <TextArea
-    //       className="bg-gray-100 shadow-sm focus:ring-2 focus:ring-primary focus:border-primary rounded-md w-full mb-4"
-    //       placeholder="Enter the title of your note..."
-    //     />
-
-    //     <h2 className="text-lg font-semibold text-secondary mb-2">Details:</h2>
-    //     <TextArea
-    //       className="bg-gray-100 shadow-sm focus:ring-2 focus:ring-primary focus:border-primary rounded-md w-full mb-4"
-    //       placeholder="Enter the details of your note...""
-    //     />
-    //
-    //   </section>
-
-    // TODO
-    //   {fetchLoading ? (
-    //     <p className="text-muted-foreground">Retrieving Your Data...</p>
-    //   ) : (
-    //     <CardContent className="w-full max-w-2xl flex flex-col gap-4">
-    //       {notes.length > 0 ? (
-    //         notes.map((note) => (
-    //           <Card
-    //             key={note.id}
-    //             className="p-4 shadow-sm rounded-lg border border-gray-200"
-    //           >
-    //             <section className="flex flex-col">
-    //               <CardTitle className="text-lg font-bold text-primary">
-    //                 {note.title}
-    //               </CardTitle>
-    //               <CardDescription className="whitespace-pre-wrap break-words text-muted-foreground">
-    //                 <ReactMarkdown
-    //                   remarkPlugins={[remarkGfm, remarkBreaks]}
-    //                   rehypePlugins={[rehypeHighlight]}
-    //                 >
-    //                   {note.description}
-    //                 </ReactMarkdown>
-    //               </CardDescription>
-    //             </section>
-    //             <section className="flex justify-end mt-4">
-    //               <Button
-    //                 onClick={() => handleDeleteNote(note.id, currentUserId)}
-    //                 className="bg-red-500 text-white hover:bg-red-600"
-    //               >
-    //                 <Trash2 className="mr-2" />
-    //                 Delete
-    //               </Button>
-    //             </section>
-    //           </Card>
-    //         ))
-    //       ) : (
-    //         <p className="text-muted-foreground text-center">
-    //           No notes available. Start by creating a new note!
-    //         </p>
-    //       )}
-    //     </CardContent>
-    //   )}
-    // </div>
   );
 };
 

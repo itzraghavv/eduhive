@@ -175,6 +175,7 @@
 .mine-markdown * {
   line-height: 1.4;
   text-align: justify;
+  /* width: 100%; */
   /* columns: 2; */
 }
 
