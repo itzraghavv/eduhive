@@ -5,7 +5,6 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ModelSelector } from "./model-selector";
 import { ModelType } from "@/types/model-types";
-import { Mic } from "lucide-react";
 import { VoiceChat } from "./voice-chat";
 
 interface ChatInputProps {
@@ -29,6 +28,10 @@ export const ChatInput = ({
     }
   };
 
+  const handleTranscription = (transcription: string) => {
+    setInputValue(transcription);
+  };
+
   return (
     <div className="flex gap-x-2 p-4 my-4 bg-muted rounded-lg">
       <ModelSelector selectedModel={selectedModel} onChange={onModelChange} />
@@ -45,7 +48,7 @@ export const ChatInput = ({
         }}
       />
       <div className="flex items-center justify-center">
-        <VoiceChat />
+        <VoiceChat onTranscription={handleTranscription} />
       </div>
       <Button onClick={handleSubmit} className="hover:cursor-pointer">
         Send

@@ -10,7 +10,7 @@ export default NextAuth({
   ],
   callbacks: {
     async session({ session, user }) {
-      session.user.id = user.id; // Ensure the user ID is added to the session
+      session.user.id = user.id;
       return session;
     },
   },
