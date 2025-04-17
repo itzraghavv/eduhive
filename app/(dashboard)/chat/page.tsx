@@ -7,6 +7,7 @@ import { useChat } from "@/hooks/use-chat";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { NoResponse } from "@/components/auth";
 
 export default function ChatPage() {
   const { messages, loading, selectedModel, setSelectedModel, sendMessage } =
@@ -27,22 +28,7 @@ export default function ChatPage() {
   }
 
   if (!session) {
-    return (
-      <div className="flex flex-col h-screen max-w-2xl mx-auto px-4 py-6 items-center justify-center text-center">
-        <h1 className="text-2xl font-bold mb-4">Please login to continue</h1>
-        <p className="text-muted-foreground">
-          You need to be logged in to access this page.
-        </p>
-        <div className="flex flex-row gap-2 mt-2 p-4">
-          <Button className="mt-4">
-            <Link href="/signin">Sign In</Link>
-          </Button>
-          <Button className="mt-4">
-            <Link href="/signup">Sign Up</Link>
-          </Button>
-        </div>
-      </div>
-    );
+    return <NoResponse />;
   }
 
   return (
