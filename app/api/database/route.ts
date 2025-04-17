@@ -3,7 +3,7 @@ import {
   createNote,
   deleteNote,
   updateNote,
-} from "@/components/crud-notes-function";
+} from "@/components/notes/crud-notes-function";
 import { NextResponse } from "next/server";
 
 // Fetch all notes
