@@ -24,7 +24,7 @@ const NotesForm: React.FC<NotesFormProps> = ({
   descInputRef,
 }) => {
   return (
-    <section className="w-full max-w-3xl shadow-md rounded-lg p-6 mb-6 box-border">
+    <section className="w-full max-w-3xl shadow-md rounded-lg p-6 mb-4 box-border">
       <h2 className="text-lg text-muted-foreground font-semibold mb-2">
         Title:
       </h2>
