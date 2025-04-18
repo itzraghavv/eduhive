@@ -29,6 +29,7 @@ model User {
   updatedAt DateTime @updatedAt
   Note      Note[]
   Chat      Chat[]
+  Image     Image[]
 }
 
 model Note {
@@ -48,4 +49,13 @@ model Chat {
   messages  Json
   context   String?
   createdAt DateTime @default(now())
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  url       String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

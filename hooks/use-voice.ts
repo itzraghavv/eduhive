@@ -1,4 +1,3 @@
-import { sendMessageToGroq } from "@/lib/groq";
 import axios from "axios";
 import { useState, useRef } from "react";
 
@@ -18,11 +17,15 @@ export const useVoiceToGroq = () => {
       audioChunksRef.current.push(e.data);
     };
 
+    console.log("stream");
+    console.log(stream);
     mediaRecorder.onstop = async () => {
       const audioBlob = new Blob(audioChunksRef.current, {
         type: "audio/webm",
       });
       await handleTranscription(audioBlob);
+      console.log("audioBlob");
+      console.log(audioBlob);
     };
 
     mediaRecorderRef.current = mediaRecorder;

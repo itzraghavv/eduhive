@@ -2,11 +2,9 @@
 
 import { ChatBox } from "@/components/chat-box";
 import { ChatInput } from "@/components/chat-input";
-import { Button } from "@/components/ui/button";
 import { useChat } from "@/hooks/use-chat";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { NoResponse } from "@/components/auth";
 
 export default function ChatPage() {
