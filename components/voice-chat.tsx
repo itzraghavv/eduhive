@@ -40,7 +40,7 @@ export const VoiceChat = ({ onTranscription }: VoiceChatProps) => {
               )}
               <Button
                 onClick={handleClick}
-                className={`relative z-10 rounded-md p-4  flex items-center justify-center transition-all duration-300 ${
+                className={`relative z-10 rounded-lg flex items-center justify-center transition-all duration-300 hover:cursor-pointer ${
                   recording
                     ? "bg-red-500 hover:bg-red-600"
                     : "bg-blue-500 hover:bg-blue-600"

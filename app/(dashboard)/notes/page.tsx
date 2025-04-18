@@ -78,9 +78,6 @@ const NotesPage = () => {
 
     fetchNotes(currentUserId);
 
-    toast.success("Note Saved Succesfully...", {
-      description: title + " named.",
-    });
     setTitle("");
     setDesc("");
   };

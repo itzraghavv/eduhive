@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio"
   },
@@ -17,6 +17,7 @@
     "@radix-ui/react-select": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-tooltip": "^1.2.0",
+    "@supabase/supabase-js": "^2.49.4",
     "@types/bcrypt": "^5.0.2",
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
