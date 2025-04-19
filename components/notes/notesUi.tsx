@@ -1,7 +1,12 @@
 import { Edit, Minimize2, Trash2 } from "lucide-react";
 import { Loader2 } from "lucide-react";
-
 import { Button } from "../ui/button";
+
+// For Markdown
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
+import remarkBreaks from "remark-breaks";
+import rehypeHighlight from "rehype-highlight";
 
 const NotesPageHeader = () => {
   return (
@@ -95,6 +100,19 @@ const ToolBar = () => {
     </div>
   );
 };
+
+// const Preview = ({ children }: { children: string }) => {
+//   return (
+//     <div className="flex-1 w-full mine-markdown">
+//       <ReactMarkdown
+//         remarkPlugins={[remarkGfm, remarkBreaks]}
+//         rehypePlugins={[rehypeHighlight]}
+//       >
+//         {children}
+//       </ReactMarkdown>
+//     </div>
+//   );
+// };
 
 export { NotesPageHeader, NotesPageLoading, NotesLoading, ToolBar };
 

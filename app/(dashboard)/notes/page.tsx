@@ -33,6 +33,8 @@ declare module "next-auth" {
 const NotesPage = () => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const [previewEnabled, setPreviewEnabled] = useState(false);
+
   const {
     notes,
     loading,
@@ -82,6 +84,11 @@ const NotesPage = () => {
     setDesc("");
   };
 
+  const previewToggle = () => {
+    setPreviewEnabled((prev) => !prev);
+    toast.success("Toggled state");
+  };
+
   // Delete Note function
   const deleteNote_RefreshNote = async (id: string, userId: string) => {
     if (userId) {
@@ -123,7 +130,10 @@ const NotesPage = () => {
           loading={loading}
           error={error}
           descInputRef={descInputRef}
+          previewToggle={previewToggle}
         />
+
+        {/* <Preview children={desc} /> */}
 
         {fetchLoading ? (
           <NotesLoading />
@@ -136,8 +146,12 @@ const NotesPage = () => {
         )}
       </div>
       {/* <NotesDescription/> */}
-      {selectedNote ? (
-        <NoteDetails />
+      {selectedNote || previewEnabled ? (
+        <NoteDetails
+          previewEnabled={previewEnabled}
+          title={title}
+          desc={desc}
+        />
       ) : (
         <div className="flex-1 flex w-full h-full max-w-3xl items-center justify-center text-muted-foreground ">
           Select a note to view its details.
