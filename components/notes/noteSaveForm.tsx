@@ -73,7 +73,7 @@ const NotesForm: React.FC<NotesFormProps> = ({
         <Button
           onClick={saveNote}
           disabled={loading}
-          className="bg-primary text-white hover:bg-primary-dark flex-1"
+          className="bg-blue-500 text-white hover:bg-primary-dark flex-1"
         >
           {loading ? "Saving..." : "Save Note"}
         </Button>

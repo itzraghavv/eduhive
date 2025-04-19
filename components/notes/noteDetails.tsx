@@ -1,4 +1,4 @@
-import { Maximize2 } from "lucide-react";
+import { Maximize2, Download } from "lucide-react";
 import Link from "next/link";
 import { useNotesContext } from "@/context/NotesContext";
 import { useEffect, useState } from "react";
@@ -51,7 +51,7 @@ const NoteDetails = ({
   }, [selectedNote, router]);
 
   return (
-    <div className="flex-1 flex flex-col w-full h-full max-w-3xl bg-white rounded-lg shadow-md p-6 overflow-y-auto">
+    <div className="flex-1 flex flex-col w-full h-full max-w-3xl rounded-lg shadow-md p-6 overflow-y-auto">
       <div className="flex flex-row items-center justify-between mb-4">
         <div className="flex flex-col">
           {previewEnabled ? (
@@ -60,17 +60,24 @@ const NoteDetails = ({
               notes
             </span>
           ) : null}
-          <h2 className="text-xl font-bold text-primary">{name}</h2>
+          <h2 className="text-3xl font-bold text-primary">{name}</h2>
         </div>
         {!previewEnabled ? (
-          <Link
-            href={{
-              pathname: `/notes/${selectedNote?.id}`,
-            }}
-            className=""
-          >
-            <Maximize2 size={24} />
-          </Link>
+          <div className="flex flex-row gap-4">
+            <Download size={18} />
+            <Link
+              href={{
+                pathname: `/notes/${selectedNote?.id}`,
+              }}
+              className=""
+            >
+              <Maximize2
+                size={18}
+                color={"oklch(62.3% 0.214 259.815)"}
+                strokeWidth="3"
+              />
+            </Link>
+          </div>
         ) : null}
       </div>
       <div className="prose prose-sm text-muted-foreground break-words text-justify mine-markdown">

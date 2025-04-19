@@ -121,34 +121,45 @@
   }
 }
 
+::selection {
+  background-color: #000000dd; /* Change this to your desired background color */
+  color: #fff; /* Change this to your desired text color */
+}
+
+/* For Firefox (optional, as it supports ::selection) */
+::-moz-selection {
+  background-color: #ffcc00; /* Same as above */
+  color: #000000; /* Same as above */
+}
+
 /* Headings */
 .mine-markdown h1 {
-  font-size: 2.5rem; /* Largest—for main titles */
+  font-size: 1.8rem; /* Largest—for main titles */
   /* margin: 1rem 0 0.5rem; */
   margin: 0.55rem 0 0.275rem;
 }
 .mine-markdown h2 {
-  font-size: 2rem; /* Section headings */
+  font-size: 1.6rem; /* Section headings */
   /* margin: 1.25rem 0 0.75rem; */
   margin: 0.6875rem 0 0.4125rem;
 }
 .mine-markdown h3 {
-  font-size: 1.75rem; /* Subsection headings */
+  font-size: 1.4rem; /* Subsection headings */
   margin: 1rem 0 0.5rem;
   /* color: #45b29d; */
 }
 .mine-markdown h4 {
-  font-size: 1.5rem; /* Smaller sub‑subsections */
+  font-size: 1.2rem; /* Smaller sub‑subsections */
   margin: 0.75rem 0 0.5rem;
   /* color: #efc050; */
 }
 .mine-markdown h5 {
-  font-size: 1.25rem; /* Low‑level headings */
+  font-size: 1rem; /* Low‑level headings */
   margin: 0.5rem 0 0.25rem;
   /* color: #5b5ea6; */
 }
 .mine-markdown h6 {
-  font-size: 1rem; /* Least important */
+  font-size: 0.8rem; /* Least important */
   margin: 0.5rem 0 0.25rem;
   /* color: #9b2335; */
 }
@@ -161,20 +172,17 @@
 .mine-markdown h5,
 .mine-markdown h6 {
   line-height: 1.2;
+  /* font-family: monospace; */
 }
 
-/* .mine-markdown blockquote {
-  margin: 1rem 0;
-  padding: 0rem 0rem 0rem 1rem;
-  border-left: 4px solid #ccc;
-  color: #555;
-  background-color: #eee;
-  border-radius: 8px;
-} */
+.mine-markdown p {
+  font-size: 0.9rem;
+}
 
 .mine-markdown * {
-  line-height: 1.4;
+  /* line-height: 1.4; */
   text-align: justify;
+  /* font-family: "Segoe UI", "Times New Roman"; */
   /* width: 100%; */
   /* columns: 2; */
 }
@@ -233,6 +241,8 @@
 .mine-markdown ul ul,
 .mine-markdown ol ul {
   list-style-type: circle;
+  font-size: 0.85rem;
+  line-height: 1.4;
 }
 
 .mine-markdown ul ol,
@@ -310,7 +320,7 @@
   color: #333; /* Dark text color for readability */
   padding: 0.2rem 0.4rem; /* Add slight padding for better visibility */
   border-radius: 0.3rem; /* Rounded corners */
-  font-size: 0.95rem; /* Slightly smaller font size */
+  font-size: 1rem; /* Slightly smaller font size */
   display: inline-block; /* Ensure it behaves like an inline element */
   letter-spacing: -0.02em;
 }
@@ -327,91 +337,12 @@
 
 .mine-markdown pre code {
   font-size: 0.95rem; /* Slightly smaller font size */
-  background: none; /* Remove background from nested code */
-  padding: 0; /* Remove padding from nested code */
+  background: none;
+  padding: 0;
 }
 
-/* 
-
-italic
-
-bold
-
-bold n italic
-
-
-H1
-
-H2
-
-H3
-
-H6
-
-
-Quote1
-
-
-
-Quote 2
-
-
-
-
-
-Bullet by *
-
-
-
-Bullet by -
-
-
-
-Bullet by +
-
-
-
-Ordered List
-
-By adding  number n full stop
-
-
-One line then spaces of 5     Line 2 not by enter
-
-Alternatively U can use <br/> tag for that
-
-
-
-for line using -
-
-alternatively by _
-
-
-
-Links
-
-OpenAI
-
-
-Images
-
-Alt text
-
-
-Table
-
-
-Header 1	Header 2
-Cell 1	Cell 2
-Cell 3	Cell 4
-
-Task List
-
-
-
- Completed task
-
- Incomplete task
-
-
-*/
+.selection-menu-button {
+  padding-inline: calc(var(--spacing) * 2);
+  padding-block: calc(var(--spacing) * 1) /* 0.25rem = 4px */;
+  background-color: var(--color-black);
+}

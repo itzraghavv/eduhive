@@ -1,12 +1,20 @@
-import { Edit, Minimize2, Trash2 } from "lucide-react";
+import {
+  Edit,
+  FolderArchive,
+  Minimize2,
+  Trash2,
+  Sparkles,
+  Star,
+  Quote,
+} from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 
 // For Markdown
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
-import remarkBreaks from "remark-breaks";
-import rehypeHighlight from "rehype-highlight";
+// import ReactMarkdown from "react-markdown";
+// import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
+// import remarkBreaks from "remark-breaks";
+// import rehypeHighlight from "rehype-highlight";
 
 const NotesPageHeader = () => {
   return (
@@ -80,9 +88,29 @@ const ToolBar = () => {
   };
 
   return (
-    <div className="w-[80%] flex justify-between content-center">
+    <div
+      className="w-[80%] sticky top-5 flex flex-1 justify-between content-center "
+      // style={{ backgroundColor: "white" }}
+    >
       <h2 className="text-xl font-bold text-primary">{selectedNote?.title}</h2>
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row gap-2 items-center justify-center ">
+        <Button className="bg-transparent hover:bg-gray-200">
+          <FolderArchive color="black" strokeWidth={3} size={35} />
+        </Button>
+        <Button className="bg-black">
+          <Star color="yellow" strokeWidth={3} />
+        </Button>
+        <Button className="bg-blue-500">
+          <Sparkles color="white" strokeWidth={2} />
+          <span className="text-white text-sm font-mono tracking-wider ">
+            Summarizer
+          </span>
+        </Button>
+        <Button className="bg-red-500">
+          <Quote color="white" strokeWidth={3} />
+
+          {/* <Sparkles color="#fb2c36" /> */}
+        </Button>
         <Button>
           <Edit />
         </Button>
@@ -101,20 +129,23 @@ const ToolBar = () => {
   );
 };
 
-// const Preview = ({ children }: { children: string }) => {
-//   return (
-//     <div className="flex-1 w-full mine-markdown">
-//       <ReactMarkdown
-//         remarkPlugins={[remarkGfm, remarkBreaks]}
-//         rehypePlugins={[rehypeHighlight]}
-//       >
-//         {children}
-//       </ReactMarkdown>
-//     </div>
-//   );
-// };
+const Archieve = ({
+  handleArchieveOpen,
+}: {
+  handleArchieveOpen: () => void;
+}) => {
+  return (
+    <div
+      className=" flex flex-col w-full h-40 bg-black rounded-lg items-center justify-center transition-all duration-250 hover:border-4 hover:border-white"
+      onClick={handleArchieveOpen}
+    >
+      <FolderArchive size={28} color="white" />
+      <h4 className="font-mono text-md text-white">Archieve</h4>
+    </div>
+  );
+};
 
-export { NotesPageHeader, NotesPageLoading, NotesLoading, ToolBar };
+export { NotesPageHeader, NotesPageLoading, NotesLoading, ToolBar, Archieve };
 
 {
   /*

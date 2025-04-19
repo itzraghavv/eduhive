@@ -14,10 +14,13 @@ import {
   NotesPageHeader,
   NotesPageLoading,
   NotesLoading,
+  Archieve,
 } from "@/components/notes/notesUi";
 import NotesForm from "@/components/notes/noteSaveForm";
 import NotesList from "@/components/notes/notesList";
 import NoteDetails from "@/components/notes/noteDetails";
+
+import Modal from "@/components/notes/Archieve";
 
 // Extend the Session type to include the user id
 declare module "next-auth" {
@@ -100,6 +103,16 @@ const NotesPage = () => {
     }
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+
+  const handleArchieveOpen = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleArchieveClose = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
   useEffect(() => {
     if (currentUserId) {
       fetchNotes(currentUserId);
@@ -115,8 +128,8 @@ const NotesPage = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col lg:flex-row items-center justify-center px-4 py-6 min-h-0 lg:h-screen h-full">
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 min-h-0 lg:h-full h-80">
+    <div className="flex-1 flex flex-col lg:flex-row items-center justify-around px-4 py-6 min-h-0 lg:h-screen h-full ">
+      <div className="flex-1 flex flex-col items-center justify-center content-center px-2 py-6 min-h-0 lg:h-full h-80 max-w-3xl">
         {/* Headings */}
         <NotesPageHeader />
 
@@ -145,17 +158,42 @@ const NotesPage = () => {
           />
         )}
       </div>
-      {/* <NotesDescription/> */}
-      {selectedNote || previewEnabled ? (
-        <NoteDetails
-          previewEnabled={previewEnabled}
-          title={title}
-          desc={desc}
-        />
-      ) : (
-        <div className="flex-1 flex w-full h-full max-w-3xl items-center justify-center text-muted-foreground ">
-          Select a note to view its details.
-        </div>
+
+      <div className="flex flex-1 flex-col-reverse w-full max-w-3xl h-full gap-4 px-2">
+        {/* <NotesDescription/> */}
+        {selectedNote || previewEnabled ? (
+          <NoteDetails
+            previewEnabled={previewEnabled}
+            title={title}
+            desc={desc}
+          />
+        ) : (
+          <div className="flex-1 flex w-full h-full max-w-3xl items-center justify-center text-muted-foreground ">
+            Select a note to view its details.
+          </div>
+        )}
+
+        <hr className="w-[30%] mx-auto border-2 border-black rounded-full" />
+
+        <Archieve handleArchieveOpen={handleArchieveOpen} />
+      </div>
+      {isModalOpen && (
+        <Modal isOpen={isModalOpen} onClose={handleArchieveClose}>
+          <h2 className="text-xl font-bold mb-4">Archived Notes</h2>
+          <ul className="list-disc pl-5">
+            {notes.map((note) => (
+              <li key={note.id} className="mb-2">
+                {note.title}
+              </li>
+            ))}
+          </ul>
+          <button
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 mt-4"
+            onClick={handleArchieveClose}
+          >
+            Close
+          </button>
+        </Modal>
       )}
     </div>
   );

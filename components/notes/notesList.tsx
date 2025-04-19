@@ -1,9 +1,10 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, Search, Star } from "lucide-react";
 import { useState } from "react";
 import { useNotesContext } from "@/context/NotesContext";
 import { toast } from "sonner";
+import { Input, TextArea } from "../ui/input";
 
 interface DeleteButtonProps {
   id: string;
@@ -52,7 +53,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
       className="flex items-center justify-between px-1 py-2 border-b border-gray-200 shadow-2xs cursor-pointer hover:bg-gray-200 rounded-lg"
       onClick={onClick}
     >
-      <span className="text-sm font-medium text-primary truncate">{title}</span>
+      <span className="text-sm font-medium text-[#333] truncate">{title}</span>
       <DeleteButton
         id={id}
         currentUserId={currentUserId}
@@ -62,6 +63,28 @@ const NoteItem: React.FC<NoteItemProps> = ({
   );
 };
 
+const BulletStrip: React.FC<{ setSortingRule: (rule: string) => void }> = ({
+  setSortingRule,
+}) => {
+  const bullets = ["Starred", "Title", "Last Modified", "Created At"];
+
+  return (
+    <div className="flex flex-row p-2 rounded-none justify-start gap-4 bg-white">
+      {bullets.map((bullet, index) => (
+        <div
+          key={index}
+          className="text-xs font-mono text-black cursor-pointer px-4 py-1 bg-[#00000010] rounded-full transition-all duration-250 hover:bg-[#0000] border-2 border-[#0000] hover:border-[#00000010]"
+          onClick={() => {
+            console.log(`Clicked: ${bullet}`);
+            setSortingRule(bullet);
+          }}
+        >
+          {bullet}
+        </div>
+      ))}
+    </div>
+  );
+};
 interface NotesListProps {
   notes: { id: string; title: string; description: string }[];
   currentUserId: string | undefined;
@@ -74,7 +97,9 @@ const NotesList: React.FC<NotesListProps> = ({
   handleDeleteNote,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
-
+  const setSortingRule = (rule: string) => {
+    console.log(`Sorting rule set to: ${rule}`);
+  };
   const { setSelectedNote } = useNotesContext();
 
   // Filter notes based on the search query
@@ -85,20 +110,31 @@ const NotesList: React.FC<NotesListProps> = ({
     : notes;
 
   return (
-    <div className="lg:flex-1 h-90 flex-col overflow-y-auto mx-auto w-full max-w-3xl bg-white rounded-lg">
-      {/* notes search bar */}
-      <div className="mb-4 sticky top-0 z-10 rounded-lg">
-        <input
-          type="text"
-          placeholder="Search notes by title..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-2 md:px-4 py-2 bg-white border border-gray-300 rounded-lg focus-visible:ring-0 focus:border-2"
-        />
+    <div className="lg:flex-1 flex-col overflow-y-auto mx-auto w-full max-w-3xl bg-white rounded-lg h-80 lg:h-full">
+      {/* Search Header */}
+      <div className="mb-0 sticky top-0 z-10 rounded-none">
+        {/* Search Bar */}
+        <div className="relative flex-1">
+          <Input
+            type="text"
+            placeholder="Search notes"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-2 md:px-4 py-2 bg-white border-2 border-blue-500 rounded-lg focus-visible:ring-0 focus:border-2 cursor-text placeholder:text-blue-500 placeholder:font-mono"
+          />
+          <Search
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-text"
+            size={20}
+            color={"oklch(62.3% 0.214 259.815)"}
+          />
+        </div>
+
+        {/* Notes Sorting Strip */}
+        <BulletStrip setSortingRule={setSortingRule} />
       </div>
 
       {/* notes list */}
-      <ScrollArea className="flex-1 flex-col w-full bg-muted rounded-lg mb-6 overflow-y-auto px-2 ">
+      <ScrollArea className="flex-1 flex-col w-full bg-white rounded-lg mb-2 overflow-y-auto px-6 ">
         {filteredNotes.length > 0 ? (
           filteredNotes.map((note) => (
             <NoteItem
