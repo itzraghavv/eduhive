@@ -5,6 +5,8 @@ import { useDB } from "@/hooks/use-db";
 import { toast } from "sonner";
 // import "sonner/dist/sonner.css";
 
+import { useNotesContext } from "@/context/NotesContext";
+
 import { useSession } from "next-auth/react";
 import { NoResponse } from "@/components/auth";
 
@@ -15,6 +17,7 @@ import {
 } from "@/components/notes/notesUi";
 import NotesForm from "@/components/notes/noteSaveForm";
 import NotesList from "@/components/notes/notesList";
+import NoteDetails from "@/components/notes/noteDetails";
 
 // Extend the Session type to include the user id
 declare module "next-auth" {
@@ -30,6 +33,8 @@ declare module "next-auth" {
 const NotesPage = () => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const [previewEnabled, setPreviewEnabled] = useState(false);
+
   const {
     notes,
     loading,
@@ -43,6 +48,8 @@ const NotesPage = () => {
   const { data: session, status } = useSession();
   const currentUserId = session?.user?.id;
 
+  const { selectedNote, setSelectedNote } = useNotesContext();
+
   // for enter key press moving
   const descInputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -50,20 +57,12 @@ const NotesPage = () => {
     if (!currentUserId) {
       toast.error("No User has been found", {
         description: "User Credentials are absent...",
-        // action: {
-        //   label: "Undo",
-        //   onClick: () => console.log("Undo"),
-        // },
       });
       return;
     }
     if (!title || !desc) {
       toast.error("Enter data in Input Fields first...", {
         description: "Form is empty",
-        // action: {
-        //   label: "Undo",
-        //   onClick: () => console.log("Undo"),
-        // },
       });
       return;
     }
@@ -83,6 +82,11 @@ const NotesPage = () => {
 
     setTitle("");
     setDesc("");
+  };
+
+  const previewToggle = () => {
+    setPreviewEnabled((prev) => !prev);
+    toast.success("Toggled state");
   };
 
   // Delete Note function
@@ -111,30 +115,47 @@ const NotesPage = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 min-h-0 h-screen">
-      {/* Headings */}
-      <NotesPageHeader />
+    <div className="flex-1 flex flex-col lg:flex-row items-center justify-center px-4 py-6 min-h-0 lg:h-screen h-full">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 min-h-0 lg:h-full h-80">
+        {/* Headings */}
+        <NotesPageHeader />
 
-      {/* Notes Creating Form */}
-      <NotesForm
-        title={title}
-        desc={desc}
-        setTitle={setTitle}
-        setDesc={setDesc}
-        saveNote={saveNote}
-        loading={loading}
-        error={error}
-        descInputRef={descInputRef}
-      />
-
-      {fetchLoading ? (
-        <NotesLoading />
-      ) : (
-        <NotesList
-          notes={notes}
-          currentUserId={currentUserId}
-          handleDeleteNote={deleteNote_RefreshNote}
+        {/* Notes Creating Form */}
+        <NotesForm
+          title={title}
+          desc={desc}
+          setTitle={setTitle}
+          setDesc={setDesc}
+          saveNote={saveNote}
+          loading={loading}
+          error={error}
+          descInputRef={descInputRef}
+          previewToggle={previewToggle}
         />
+
+        {/* <Preview children={desc} /> */}
+
+        {fetchLoading ? (
+          <NotesLoading />
+        ) : (
+          <NotesList
+            notes={notes}
+            currentUserId={currentUserId}
+            handleDeleteNote={deleteNote_RefreshNote}
+          />
+        )}
+      </div>
+      {/* <NotesDescription/> */}
+      {selectedNote || previewEnabled ? (
+        <NoteDetails
+          previewEnabled={previewEnabled}
+          title={title}
+          desc={desc}
+        />
+      ) : (
+        <div className="flex-1 flex w-full h-full max-w-3xl items-center justify-center text-muted-foreground ">
+          Select a note to view its details.
+        </div>
       )}
     </div>
   );

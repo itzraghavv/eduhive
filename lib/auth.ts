@@ -54,14 +54,14 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token: any }) {
       // Attach the user ID to the session object
       if (token?.sub) {
         session.user.id = token.sub;
       }
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: any; user: any }) {
       // Attach the user ID to the JWT token
       if (user) {
         token.sub = user.id;
