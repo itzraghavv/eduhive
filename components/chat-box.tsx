@@ -4,14 +4,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
 
-// FONT STYLE / MARKDOWN IMPORTS
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
+import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import rehypeHighlight from "rehype-highlight";
-// import "highlight.js/styles/github-dark.css";
+
+type Message = {
+  role: "user" | "ai" | "assistant";
+  content?: string;
+  type?: "text" | "image";
+  url?: string;
+};
 interface ChatBoxProps {
-  messages: { role: "user" | "ai" | "assistant"; content: string }[];
+  messages: Message[];
   loading: boolean;
 }
 
@@ -34,12 +39,20 @@ export const ChatBox = ({ messages, loading }: ChatBoxProps) => {
           }`}
         >
           <CardContent className="px-3 text-sm mine-markdown">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm, remarkBreaks]}
-              rehypePlugins={[rehypeHighlight]}
-            >
-              {message.content}
-            </ReactMarkdown>
+            {message.type === "image" && message.url ? (
+              <img
+                src={message.url}
+                alt="Uploaded content"
+                className="rounded-lg max-w-xs"
+              />
+            ) : (
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm, remarkBreaks]}
+                rehypePlugins={[rehypeHighlight]}
+              >
+                {message.content || ""}
+              </ReactMarkdown>
+            )}
           </CardContent>
         </Card>
       ))}
