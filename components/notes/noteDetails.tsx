@@ -35,7 +35,7 @@ const NoteDetails = ({
   // Update state when `previewEnabled`, `title`, `desc`, or `selectedNote` changes
   useEffect(() => {
     if (previewEnabled) {
-      setName("PREVIEW : " + title);
+      setName(title);
       setDescription(desc);
     } else if (selectedNote) {
       setName(selectedNote.title);

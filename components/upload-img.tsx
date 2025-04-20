@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { ImagePlus, Loader2 } from "lucide-react";
 import {
   Tooltip,
@@ -9,36 +8,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+interface ImageUploadProps {
+  preview?: string | null;
+  uploading?: boolean;
+  handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-export const ImageUpload = () => {
-  const [uploading, setUploading] = useState(false);
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      console.log(data);
-    } catch (err) {
-      console.error("Upload failed", err);
-    } finally {
-      setUploading(false);
-    }
-  };
-
+export const ImageUpload = ({
+  preview,
+  uploading,
+  handleImageChange,
+}: ImageUploadProps) => {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex flex-col items-center justify-center gap-4">
       <TooltipProvider delayDuration={0}>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -47,11 +29,11 @@ export const ImageUpload = () => {
                 type="file"
                 accept="image/*"
                 className="hidden"
-                onChange={handleImageUpload}
+                onChange={handleImageChange}
               />
               <Button
                 asChild
-                className="bg-blue-500 hover:bg-blue-600 rounded-full p-3 text-white"
+                className="bg-blue-500 hover:bg-blue-600 hover:cursor-pointer rounded-full p-3 text-white"
                 disabled={uploading}
               >
                 <div className="flex items-center justify-center">
