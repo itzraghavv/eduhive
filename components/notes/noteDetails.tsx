@@ -66,8 +66,8 @@ const NoteDetails = ({
         </div>
         {!previewEnabled ? (
           <div className="flex flex-row gap-4">
-            <UserPlus size={18} />
-            <PdfGenerator />
+            {/* <UserPlus size={18} /> */}
+            {/* <PdfGenerator /> */}
             <Link
               href={{
                 pathname: `/notes/${selectedNote?.id}`,

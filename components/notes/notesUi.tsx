@@ -96,10 +96,10 @@ const ToolBar = () => {
     >
       <h2 className="text-xl font-bold text-primary">{selectedNote?.title}</h2>
       <div className="flex flex-row gap-2 items-center justify-center ">
-        <Button className="bg-gray-300 hover:bg-gray-100">
+        {/* <Button className="bg-gray-300 hover:bg-gray-100">
           <FolderArchive color="black" strokeWidth={3} size={35} />
-        </Button>
-        <Button className="bg-gray-300 hover:bg-gray-100">
+        </Button> */}
+        {/* <Button className="bg-gray-300 hover:bg-gray-100">
           <UserPlus color="black" strokeWidth={3} size={35} />
         </Button>
         <Button className="bg-black">
@@ -113,9 +113,9 @@ const ToolBar = () => {
         </Button>
         <Button className="bg-red-500">
           <Quote color="white" strokeWidth={3} />
-
-          {/* <Sparkles color="#fb2c36" /> */}
-        </Button>
+*/}
+        {/* <Sparkles color="#fb2c36" /> */}
+        {/* </Button>  */}
         <Button>
           <Edit />
         </Button>

@@ -21,14 +21,14 @@ export function ChatBox() {
 
   const sendMessage = () => {
     if (!input.trim()) return;
-    const userMsg = { role: "user", content: input };
+    const userMsg = { role: "user" as const, content: input };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
 
     setTimeout(() => {
       const aiMsg = {
-        role: "ai",
+        role: "ai" as const,
         content: `You said: "${input}". Here's what I think...`,
       };
       setMessages((prev) => [...prev, aiMsg]);
