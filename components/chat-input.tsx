@@ -9,14 +9,15 @@ import { VoiceChat } from "./voice-chat";
 import { ImageUpload } from "./upload-img";
 import { useImageUpload } from "@/hooks/use-image-upload";
 
+type Message = {
+  type: "text" | "image";
+  content?: string;
+  url?: string;
+};
 interface ChatInputProps {
   selectedModel: ModelType;
   onModelChange: (model: ModelType) => void;
-  onSendMessage: (message: {
-    type: "text" | "image";
-    content?: string;
-    url?: string;
-  }) => void;
+  onSendMessage: (message: Message) => void;
 }
 
 export const ChatInput = ({

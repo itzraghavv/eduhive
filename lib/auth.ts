@@ -1,6 +1,8 @@
 import { compare } from "bcrypt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
+import { Session } from "inspector/promises";
+import { SessionStrategy } from "next-auth";
 
 export const authOptions = {
   providers: [
@@ -51,7 +53,7 @@ export const authOptions = {
     }),
   ],
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as SessionStrategy,
   },
   callbacks: {
     async session({ session, token }: { session: any; token: any }) {

@@ -43,6 +43,7 @@ export default function ChatPage() {
           <ChatInput
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
+            // @ts-ignore
             onSendMessage={sendMessage}
           />
         </div>

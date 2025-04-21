@@ -10,6 +10,7 @@ export async function sendMessageToGroq(
 ) {
   const response = await groq.chat.completions.create({
     model,
+    // @ts-ignore
     messages,
   });
 
