@@ -26,25 +26,12 @@ import { useSession } from "next-auth/react";
 
 const NotesPageHeader = () => {
   return (
-    <section className="w-full max-w-3xl text-center mb-4">
-      <h1 className="text-3xl font-extrabold text-primary mb-2">Notes Page</h1>
+    <section className="w-full max-w-3xl text-center mb-2">
+      <h1 className="text-3xl font-extrabold text-primary">Notes Page</h1>
       <p className="text-muted-foreground">
         Create, view, and manage your notes with ease.
       </p>
     </section>
-  );
-};
-
-const NotesPageLoading = () => {
-  return (
-    <div className="flex flex-col h-screen max-w-2xl mx-auto px-4 py-4 items-center justify-center text-center">
-      <h1 className="text-2xl font-bold mb-2">Loading...</h1>
-      <Loader2 className="animate-spin" />
-      <p className="text-muted-foreground">
-        Please wait while we load your notes.
-      </p>
-      <div className="loader mt-4"></div>
-    </div>
   );
 };
 
@@ -153,7 +140,6 @@ const Archieve = ({
 
 export {
   NotesPageHeader,
-  NotesPageLoading,
   NotesLoading,
   ToolBar,
   Archieve,

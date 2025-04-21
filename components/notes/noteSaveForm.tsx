@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { RefObject, useRef } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Info } from "lucide-react";
+
 interface NotesFormProps {
   title: string;
   desc: string;
@@ -49,7 +50,7 @@ const NotesForm: React.FC<NotesFormProps> = ({
 
       <TextArea
         ref={descInputRef}
-        className="bg-white shadow-2xs focus-visible:ring-0 focus:border-2 rounded-md w-full mb-4"
+        className="bg-white shadow-2xs focus-visible:ring-0 focus:border-2 rounded-md w-full mb-4 overflow-y-auto max-h-[200px]"
         placeholder="Enter the details of your note..."
         value={desc}
         onChange={(e) => {
@@ -57,6 +58,7 @@ const NotesForm: React.FC<NotesFormProps> = ({
           const target = e.target as HTMLTextAreaElement;
           target.style.height = "auto";
           target.style.height = `${target.scrollHeight}px`;
+          target.style.maxHeight = "50";
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {

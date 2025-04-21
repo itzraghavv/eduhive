@@ -5,15 +5,44 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 // import { DownloadAsPDF } from "./notesUi";
-import PdfGenerator from "../downloadNote";
+// import PdfGenerator from "../downloadNote";
 
 // For Markdown
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
 import remarkBreaks from "remark-breaks";
 import rehypeHighlight from "rehype-highlight";
+import {
+  Live_Preview_Heading,
+  No_Note_Selected_To_Preview,
+} from "@/constants/NoContentHandler";
 
-const NoteDetails = ({
+const PreviewToolbar = ({ goto }: { goto: string | undefined }) => {
+  return (
+    <div className="flex flex-row gap-4">
+      {/* <UserPlus size={18} /> */}
+      {/* <PdfGenerator /> */}
+      <Link href={`/notes/${goto}`}>
+        <Maximize2 size={18} color="#2b7fff" strokeWidth="3" />
+      </Link>
+    </div>
+  );
+};
+
+const FormattedContent = ({ description }: { description: string }) => {
+  return (
+    <div className="prose prose-sm text-muted-foreground break-words text-justify mine-markdown">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkBreaks]}
+        rehypePlugins={[rehypeHighlight]}
+      >
+        {description}
+      </ReactMarkdown>
+    </div>
+  );
+};
+
+export const NotePreview = ({
   previewEnabled,
   title,
   desc,
@@ -28,13 +57,10 @@ const NoteDetails = ({
   const [description, setDescription] = useState("");
 
   if (!selectedNote && !previewEnabled) {
-    return (
-      <div className="flex-1 flex w-full h-full max-w-3xl items-center justify-center text-muted-foreground ">
-        No note selected.
-      </div>
-    );
+    return <>{No_Note_Selected_To_Preview}</>;
   }
 
+  // FOR LIVE PREVIEW UPDATES N SELECTED NOTE LISTENING
   // Update state when `previewEnabled`, `title`, `desc`, or `selectedNote` changes
   useEffect(() => {
     if (previewEnabled) {
@@ -46,56 +72,26 @@ const NoteDetails = ({
     }
   }, [previewEnabled, title, desc, selectedNote]);
 
+  // FOR REFRESHING PAGE BACK AFTER RELLOAD ON [NOTE_ID].PAGE.TSX
   useEffect(() => {
     if (!selectedNote) {
-      // Redirect to the notes page if no note is selected
       router.push("/notes");
     }
   }, [selectedNote, router]);
 
   return (
     <div className="flex-1 flex flex-col w-full h-full max-w-3xl rounded-lg shadow-md p-6 overflow-y-auto">
+      {/* PREVIEW HEADER TOOLBAR*/}
       <div className="flex flex-row items-center justify-between mb-4">
         <div className="flex flex-col w-full">
-          {previewEnabled ? (
-            <span className="text-muted-foreground font-mono text-xs w-full flex items-center justify-center">
-              Toggle-off the Live Preview button to preview your notes.
-            </span>
-          ) : null}
+          {previewEnabled ? <Live_Preview_Heading /> : null}
           <h2 className="text-3xl font-bold text-primary">{name}</h2>
         </div>
-        {!previewEnabled ? (
-          <div className="flex flex-row gap-4">
-            {/* <UserPlus size={18} /> */}
-            {/* <PdfGenerator /> */}
-            <Link
-              href={{
-                pathname: `/notes/${selectedNote?.id}`,
-              }}
-              className=""
-            >
-              <Maximize2
-                size={18}
-                color={"oklch(62.3% 0.214 259.815)"}
-                strokeWidth="3"
-              />
-            </Link>
-          </div>
-        ) : null}
+        {previewEnabled ? null : <PreviewToolbar goto={selectedNote?.id} />}
       </div>
-      <div
-        className="prose prose-sm text-muted-foreground break-words text-justify mine-markdown"
-        id="content-to-pdf"
-      >
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm, remarkBreaks]}
-          rehypePlugins={[rehypeHighlight]}
-        >
-          {description}
-        </ReactMarkdown>
-      </div>
+
+      {/* PREVIEW CONTENT */}
+      <FormattedContent description={description} />
     </div>
   );
 };
-
-export default NoteDetails;

@@ -12,13 +12,13 @@ import { NoResponse } from "@/components/auth";
 
 import {
   NotesPageHeader,
-  NotesPageLoading,
   NotesLoading,
   Archieve,
 } from "@/components/notes/notesUi";
-import NotesForm from "@/components/notes/noteSaveForm";
+import NoteSaveForm from "@/components/notes/NoteSaveForm";
 import NotesList from "@/components/notes/notesList";
-import NoteDetails from "@/components/notes/noteDetails";
+import { NotePreview } from "@/components/notes/NotePreview";
+import { NotesPageLoading } from "@/constants/NoContentHandler";
 
 import { X, ArchiveRestore, Archive } from "lucide-react";
 
@@ -136,7 +136,7 @@ const NotesPage = () => {
         <NotesPageHeader />
 
         {/* Notes Creating Form */}
-        <NotesForm
+        <NoteSaveForm
           title={title}
           desc={desc}
           setTitle={setTitle}
@@ -164,7 +164,7 @@ const NotesPage = () => {
       <div className="flex flex-1 flex-col-reverse w-full max-w-3xl h-full gap-4 px-2">
         {/* <NotesDescription/> */}
         {selectedNote || previewEnabled ? (
-          <NoteDetails
+          <NotePreview
             previewEnabled={previewEnabled}
             title={title}
             desc={desc}

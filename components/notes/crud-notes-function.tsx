@@ -4,20 +4,35 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const fetchNotes = async (userId: string, orderBy: string = "title") => {
+type Note = {
+  id: string;
+  title: string;
+  description: string;
+  isArchived: boolean;
+  isStarred: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+const fetchNotes = async (
+  userId: string
+  // orderBy: string = "title"
+): Promise<Note[]> => {
+  // Validatiing Params
   if (!userId) {
     throw new Error("Invalid userId");
   }
+  // const allowedOrderByFields = ["title", "createdAt", "updatedAt"];
+  // if (!allowedOrderByFields.includes(orderBy)) {
+  //   throw new Error(`Invalid orderBy field: ${orderBy}`);
+  // }
 
-  const allowedOrderByFields = ["title", "createdAt", "updatedAt"];
-  if (!allowedOrderByFields.includes(orderBy)) {
-    throw new Error(`Invalid orderBy field: ${orderBy}`);
-  }
+  // Starting to fetch
   try {
     const data = await prisma.note.findMany({
       where: { userId },
       orderBy: {
-        [orderBy]: "asc",
+        title: "asc",
       },
       select: {
         id: true,
@@ -37,15 +52,17 @@ const fetchNotes = async (userId: string, orderBy: string = "title") => {
   }
 };
 
+type CreateNoteInput = {
+  title: string;
+  description: string;
+  userId: string;
+};
+
 const createNote = async ({
   title,
   description,
   userId,
-}: {
-  title: string;
-  description: string;
-  userId: string;
-}) => {
+}: CreateNoteInput): Promise<Note> => {
   const newNote = await prisma.note.create({
     data: {
       title,
@@ -56,7 +73,7 @@ const createNote = async ({
   return newNote;
 };
 
-const deleteNote = async ({ id }: { id: string }) => {
+const deleteNote = async (id: string): Promise<Note> => {
   try {
     const deletedNote = await prisma.note.delete({
       where: { id },
@@ -69,7 +86,15 @@ const deleteNote = async ({ id }: { id: string }) => {
   }
 };
 
-const updateNote = async (id: string, data: { title?: string }) => {
+type UpdateNoteInput = {
+  title?: string;
+  description?: string;
+};
+
+const updateNote = async (
+  id: string,
+  data: UpdateNoteInput = {}
+): Promise<Note> => {
   const updatedNote = await prisma.note.update({
     where: { id },
     data,
