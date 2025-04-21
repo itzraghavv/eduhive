@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   // TODO - Validate the Data from req body
   const { messages, model } = await req.json();
-  console.log(messages, model);
+  // console.log(messages, model);
 
   try {
     const response = await sendMessageToGroq(messages, model);

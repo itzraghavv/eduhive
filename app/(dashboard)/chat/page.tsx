@@ -1,6 +1,6 @@
 "use client";
 
-import { ChatBox } from "@/components/chat-box";
+import { ChatBox, ChatLoading } from "@/components/chat-box";
 import { ChatInput } from "@/components/chat-input";
 import { useChat } from "@/hooks/use-chat";
 import { Loader2 } from "lucide-react";
@@ -13,16 +13,7 @@ export default function ChatPage() {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
-    return (
-      <div className="flex flex-col h-screen max-w-2xl mx-auto px-4 py-6 items-center justify-center text-center">
-        <h1 className="text-2xl font-bold mb-4">Loading...</h1>
-        <Loader2 className="animate-spin" />
-        <p className="text-muted-foreground">
-          Please wait while we load your chat.
-        </p>
-        <div className="loader mt-4"></div>
-      </div>
-    );
+    return <ChatLoading />;
   }
 
   if (!session) {
@@ -43,7 +34,9 @@ export default function ChatPage() {
           <ChatInput
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
-            onSendMessage={sendMessage}
+            onSendMessage={({ type, content, url }) =>
+              sendMessage(type, content || "", url || "")
+            }
           />
         </div>
       </div>

@@ -1,3 +1,4 @@
+// import ChatCompletionMessageParam from "groq-sdk";
 import Groq from "groq-sdk";
 
 const groq = new Groq({
@@ -5,38 +6,52 @@ const groq = new Groq({
 });
 
 export async function sendMessageToGroq(
-  messages: { role: string; content: string }[],
+  messages: {
+    role: string;
+    content: string;
+    name?: string;
+  }[],
+  // messages: ChatCompletionMessageParam[],
   model: string
 ) {
+  const formattedMessages = messages.map((message) => ({
+    role: message.role as "system" | "user" | "assistant",
+    content: message.content,
+    name: message.name || "default",
+  }));
+
   const response = await groq.chat.completions.create({
     model,
-    messages,
+    messages: formattedMessages,
   });
 
   return response.choices[0]?.message?.content ?? "No response";
 }
 
-export async function analyzeImageWithGroq(imageUrl: string, prompt: string) {
-  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.GROQ_API_KEY!}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "llava-hd-13b",
-      messages: [
-        {
-          role: "user",
-          content: [
-            { type: "text", text: prompt },
-            { type: "image_url", image_url: { url: imageUrl } },
-          ],
-        },
-      ],
-    }),
+export async function analyzeImageWithGroq(
+  imageUrl: string,
+  prompt = "What is this image about?"
+) {
+  const chat = await groq.chat.completions.create({
+    model: "meta-llama/llama-4-scout-17b-16e-instruct",
+    temperature: 0.7,
+    max_completion_tokens: 1024,
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: prompt,
+          },
+          {
+            type: "image_url",
+            image_url: { url: imageUrl },
+          },
+        ],
+      },
+    ],
   });
 
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content ?? "No response";
+  return chat.choices[0]?.message?.content ?? "No response";
 }

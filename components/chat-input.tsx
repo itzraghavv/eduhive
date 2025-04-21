@@ -7,11 +7,16 @@ import { ModelSelector } from "./model-selector";
 import { ModelType } from "@/types/model-types";
 import { VoiceChat } from "./voice-chat";
 import { ImageUpload } from "./upload-img";
+import { useImageUpload } from "@/hooks/use-image-upload";
 
 interface ChatInputProps {
   selectedModel: ModelType;
   onModelChange: (model: ModelType) => void;
-  onSendMessage: (message: string) => void;
+  onSendMessage: (message: {
+    type: "text" | "image";
+    content?: string;
+    url?: string;
+  }) => void;
 }
 
 export const ChatInput = ({
@@ -20,37 +25,55 @@ export const ChatInput = ({
   onSendMessage,
 }: ChatInputProps) => {
   const [inputValue, setInputValue] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const { preview, uploading, handleImageChange } = useImageUpload();
+  // console.log(preview, uploading);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputValue.trim()) {
-      onSendMessage(inputValue);
+
+    if (imageUrl) {
+      onSendMessage({ type: "image", url: imageUrl, content: "" });
+      setImageUrl(null);
+    } else if (inputValue.trim()) {
+      onSendMessage({ type: "text", content: inputValue, url: "" });
       setInputValue("");
     }
   };
 
-  const handleTranscription = (transcription: string) => {
-    setInputValue(transcription);
-  };
-
   return (
-    <div className="flex gap-x-2 p-4 my-4 bg-muted rounded-lg">
+    <div className="relative flex gap-x-2 p-4 my-4 bg-muted rounded-lg">
       <ModelSelector selectedModel={selectedModel} onChange={onModelChange} />
+      <div className="absolute -top-20 z-10 w-32 h-32">
+        {preview && (
+          <img
+            src={preview}
+            alt="Preview"
+            className="w-28 z-10 object-cover rounded-md border border-gray-300"
+          />
+        )}
+      </div>
       <Input
         className="bg-white shadow-2xs focus-visible:ring-0 focus:border-none"
         placeholder="Ask AI..."
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSubmit(e);
-          }
-        }}
+        // onKeyDown={(e) => {
+        //   if (e.key === "Enter" && !e.shiftKey) {
+        //     e.preventDefault();
+        //     handleSubmit(e);
+        //   }
+        // }}
       />
       <div className="flex items-center justify-center space-x-2">
-        <VoiceChat onTranscription={handleTranscription} />
-        <ImageUpload />
+        <VoiceChat
+          onTranscription={(transcription) => setInputValue(transcription)}
+        />
+        <ImageUpload
+          preview={preview}
+          uploading={uploading}
+          handleImageChange={handleImageChange}
+        />
       </div>
       <Button onClick={handleSubmit} className="hover:cursor-pointer">
         Send

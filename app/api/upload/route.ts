@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import prisma from "@/lib/prisma";
-import { getSession, useSession } from "next-auth/react";
 import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,13 +10,9 @@ const supabase = createClient(
 );
 
 export async function POST(req: Request) {
-  const { data: session } = useSession();
+  const session = await getServerSession(authOptions);
 
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const userId = session.user.id!;
+  const userId = session?.user.id!;
   const formData = await req.formData();
   const file = formData.get("file") as File;
 
