@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Trash2, Search, Star } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNotesContext } from "@/context/NotesContext";
 import { toast } from "sonner";
 import { Input, TextArea } from "../ui/input";
@@ -63,10 +63,12 @@ const NoteItem: React.FC<NoteItemProps> = ({
   );
 };
 
-const BulletStrip: React.FC<{ setSortingRule: (rule: string) => void }> = ({
-  setSortingRule,
+const BulletStrip = ({
+  setOrderBy,
+}: {
+  setOrderBy: (order: string) => void;
 }) => {
-  const bullets = ["Starred", "Title", "Last Modified", "Created At"];
+  const bullets = ["starred", "title", "createdAt", "updatedAt"];
 
   return (
     <div className="flex flex-row p-2 rounded-none justify-start gap-4 bg-white">
@@ -75,8 +77,9 @@ const BulletStrip: React.FC<{ setSortingRule: (rule: string) => void }> = ({
           key={index}
           className="text-xs font-mono text-black cursor-pointer px-4 py-1 bg-[#00000010] rounded-full transition-all duration-250 hover:bg-[#0000] border-2 border-[#0000] hover:border-[#00000010]"
           onClick={() => {
-            console.log(`Clicked: ${bullet}`);
-            setSortingRule(bullet);
+            toast(`Clicked: ${bullet}`);
+
+            setOrderBy(bullet);
           }}
         >
           {bullet}
@@ -86,7 +89,13 @@ const BulletStrip: React.FC<{ setSortingRule: (rule: string) => void }> = ({
   );
 };
 interface NotesListProps {
-  notes: { id: string; title: string; description: string }[];
+  notes: {
+    id: string;
+    title: string;
+    description: string;
+    isArchived: boolean;
+    isStarred: boolean;
+  }[];
   currentUserId: string | undefined;
   handleDeleteNote: (id: string, userId: string) => void;
 }
@@ -97,17 +106,21 @@ const NotesList: React.FC<NotesListProps> = ({
   handleDeleteNote,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const setSortingRule = (rule: string) => {
-    console.log(`Sorting rule set to: ${rule}`);
-  };
+  const [orderBy, setOrderBy] = useState<string | null>(null);
   const { setSelectedNote } = useNotesContext();
 
   // Filter notes based on the search query
   const filteredNotes = searchQuery.trim()
-    ? notes.filter((note) =>
-        note.title.toLowerCase().includes(searchQuery.trim().toLowerCase())
-      )
-    : notes;
+    ? notes
+        .filter((note) => !note.isArchived)
+        .filter((note) =>
+          note.title.toLowerCase().includes(searchQuery.trim().toLowerCase())
+        )
+    : notes.filter((note) => !note.isArchived);
+
+  useEffect(() => {
+    // bla bla
+  }, [orderBy]);
 
   return (
     <div className="lg:flex-1 flex-col overflow-y-auto mx-auto w-full max-w-3xl bg-white rounded-lg h-80 lg:h-full">
@@ -130,7 +143,7 @@ const NotesList: React.FC<NotesListProps> = ({
         </div>
 
         {/* Notes Sorting Strip */}
-        <BulletStrip setSortingRule={setSortingRule} />
+        <BulletStrip setOrderBy={setOrderBy} />
       </div>
 
       {/* notes list */}

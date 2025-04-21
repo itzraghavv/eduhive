@@ -6,9 +6,17 @@ import {
   Sparkles,
   Star,
   Quote,
+  UserPlus,
+  Loader2,
+  Download,
 } from "lucide-react";
-import { Loader2 } from "lucide-react";
+
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { useNotesContext } from "@/context/NotesContext";
+import { useDB } from "@/hooks/use-db";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 // For Markdown
 // import ReactMarkdown from "react-markdown";
@@ -52,12 +60,6 @@ const NotesLoading = () => {
   );
 };
 
-import { useRouter } from "next/navigation";
-import { useNotesContext } from "@/context/NotesContext";
-import { useDB } from "@/hooks/use-db";
-import { toast } from "sonner";
-import { useSession } from "next-auth/react";
-
 const ToolBar = () => {
   const router = useRouter();
   const { selectedNote, setSelectedNote } = useNotesContext();
@@ -89,13 +91,16 @@ const ToolBar = () => {
 
   return (
     <div
-      className="w-[80%] sticky top-5 flex flex-1 justify-between content-center "
+      className="w-[80%] sticky top-0 z-10 flex flex-1 justify-between content-center bg-white p-4"
       // style={{ backgroundColor: "white" }}
     >
       <h2 className="text-xl font-bold text-primary">{selectedNote?.title}</h2>
       <div className="flex flex-row gap-2 items-center justify-center ">
-        <Button className="bg-transparent hover:bg-gray-200">
+        <Button className="bg-gray-300 hover:bg-gray-100">
           <FolderArchive color="black" strokeWidth={3} size={35} />
+        </Button>
+        <Button className="bg-gray-300 hover:bg-gray-100">
+          <UserPlus color="black" strokeWidth={3} size={35} />
         </Button>
         <Button className="bg-black">
           <Star color="yellow" strokeWidth={3} />
@@ -145,7 +150,14 @@ const Archieve = ({
   );
 };
 
-export { NotesPageHeader, NotesPageLoading, NotesLoading, ToolBar, Archieve };
+export {
+  NotesPageHeader,
+  NotesPageLoading,
+  NotesLoading,
+  ToolBar,
+  Archieve,
+  // DownloadAsPDF,
+};
 
 {
   /*

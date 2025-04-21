@@ -69,9 +69,9 @@ const NoteDetailsPage = () => {
   return (
     <div className=" flex flex-col flex-1 p-4 border rounded-md shadow-md items-center content-center m-6 min-h-0 h-full">
       <ToolBar />
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center w-[80%] overflow-y-auto">
         <ScrollArea
-          className="text-gray-700 mine-markdown max-w-[80%] p-4 prose"
+          className="text-gray-700 mine-markdown w-[80%] p-4 overflow-y-auto max-h-[80vh]"
           ref={descriptionRef}
         >
           <ReactMarkdown
@@ -85,7 +85,7 @@ const NoteDetailsPage = () => {
 
       {menuPosition && (
         <div
-          className="absolute bg-white shadow-md border rounded-md p-2  flex gap-2"
+          className="absolute z-50 bg-white shadow-md border rounded-md p-2 flex gap-2"
           style={{
             top: menuPosition.y,
             left: menuPosition.x,

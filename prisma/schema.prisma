@@ -36,6 +36,8 @@ model Note {
   id          String   @id @default(uuid())
   title       String
   description String
+  isArchived  Boolean  @default(false)
+  isStarred   Boolean  @default(false) 
   user        User     @relation(fields: [userId], references: [id])
   userId      String
   createdAt   DateTime @default(now())

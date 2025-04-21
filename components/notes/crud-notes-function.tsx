@@ -4,14 +4,21 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const fetchNotes = async (userId: string) => {
+const fetchNotes = async (userId: string, orderBy: string = "title") => {
   try {
     const data = await prisma.note.findMany({
       where: { userId },
+      orderBy: {
+        [orderBy]: "asc",
+      },
       select: {
         id: true,
         title: true,
         description: true,
+        isArchived: true,
+        isStarred: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
 

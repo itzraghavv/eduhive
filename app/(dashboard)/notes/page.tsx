@@ -20,7 +20,9 @@ import NotesForm from "@/components/notes/noteSaveForm";
 import NotesList from "@/components/notes/notesList";
 import NoteDetails from "@/components/notes/noteDetails";
 
-import Modal from "@/components/notes/Archieve";
+import { X, ArchiveRestore, Archive } from "lucide-react";
+
+// import Modal from "@/components/notes/Archieve";
 
 // Extend the Session type to include the user id
 declare module "next-auth" {
@@ -146,7 +148,7 @@ const NotesPage = () => {
           previewToggle={previewToggle}
         />
 
-        {/* <Preview children={desc} /> */}
+        <hr className="w-[30%] mx-auto mb-4 border-2 border-black rounded-full" />
 
         {fetchLoading ? (
           <NotesLoading />
@@ -173,27 +175,47 @@ const NotesPage = () => {
           </div>
         )}
 
-        <hr className="w-[30%] mx-auto border-2 border-black rounded-full" />
+        <hr className="w-[30%] mx-auto border-2 border-black rounded-full " />
 
         <Archieve handleArchieveOpen={handleArchieveOpen} />
       </div>
+
       {isModalOpen && (
-        <Modal isOpen={isModalOpen} onClose={handleArchieveClose}>
-          <h2 className="text-xl font-bold mb-4">Archived Notes</h2>
-          <ul className="list-disc pl-5">
-            {notes.map((note) => (
-              <li key={note.id} className="mb-2">
-                {note.title}
-              </li>
-            ))}
-          </ul>
-          <button
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 mt-4"
-            onClick={handleArchieveClose}
-          >
-            Close
-          </button>
-        </Modal>
+        <div className="fixed inset-0 z-50 w-full h-full bg-[#3335] flex items-center justify-center">
+          <div className="flex flex-col items-center contents-center w-full max-w-3xl max-h-[50%] bg-white rounded-lg">
+            <div className="flex w-[80%] items-center justify-between py-4">
+              <h2 className="text-xl font-bold py-2">Archived Notes</h2>
+              <div className="flex flex-row gap-4 items-center justify-around">
+                <ArchiveRestore color={"black"} strokeWidth={2} size={20} />
+                <X onClick={handleArchieveClose} strokeWidth={2} />
+              </div>
+            </div>
+            <ul className="list-none overflow-y-auto my-4 w-[80%]">
+              {/* {notes.map((note) => (
+                <li key={note.id} className="mb-2">
+                  {note.title}
+                  {note.createdAt}
+                </li>
+              ))} */}
+              {notes.filter((note) => note.isArchived).length >= 0 ? (
+                notes
+                  .filter((note) => note.isArchived)
+                  .map((note) => (
+                    <li key={note.id} className="mb-2">
+                      <div className="flex justify-between items-center">
+                        <span className="font-medium">{note.title}</span>
+                        <span className="text-sm text-gray-500">
+                          {new Date(note.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </li>
+                  ))
+              ) : (
+                <li className="text-gray-500 text-center">No archives yet</li>
+              )}
+            </ul>
+          </div>
+        </div>
       )}
     </div>
   );

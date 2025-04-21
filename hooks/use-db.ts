@@ -6,6 +6,10 @@ interface Note {
   id: string;
   title: string;
   description: string;
+  isArchived: boolean;
+  isStarred: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export function useDB() {
@@ -41,6 +45,8 @@ export function useDB() {
   }) => {
     setLoading(true);
     setError(null);
+    const isArchived = false;
+    const isStarred = false;
     try {
       const response = await fetch("/api/database", {
         method: "POST",
@@ -51,6 +57,8 @@ export function useDB() {
           title,
           description,
           userId,
+          isArchived,
+          isStarred,
         }),
       });
       if (response.ok) {

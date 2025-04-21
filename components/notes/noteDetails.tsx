@@ -1,8 +1,11 @@
-import { Maximize2, Download } from "lucide-react";
+import { Maximize2, Download, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useNotesContext } from "@/context/NotesContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+// import { DownloadAsPDF } from "./notesUi";
+import PdfGenerator from "../downloadNote";
 
 // For Markdown
 import ReactMarkdown from "react-markdown";
@@ -35,7 +38,7 @@ const NoteDetails = ({
   // Update state when `previewEnabled`, `title`, `desc`, or `selectedNote` changes
   useEffect(() => {
     if (previewEnabled) {
-      setName("PREVIEW : " + title);
+      setName("Preview : " + title);
       setDescription(desc);
     } else if (selectedNote) {
       setName(selectedNote.title);
@@ -53,18 +56,18 @@ const NoteDetails = ({
   return (
     <div className="flex-1 flex flex-col w-full h-full max-w-3xl rounded-lg shadow-md p-6 overflow-y-auto">
       <div className="flex flex-row items-center justify-between mb-4">
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           {previewEnabled ? (
-            <span className="text-muted-foreground">
-              Toggle off Live Preview button in Save Note Form to preview your
-              notes
+            <span className="text-muted-foreground font-mono text-xs w-full flex items-center justify-center">
+              Toggle-off the Live Preview button to preview your notes.
             </span>
           ) : null}
           <h2 className="text-3xl font-bold text-primary">{name}</h2>
         </div>
         {!previewEnabled ? (
           <div className="flex flex-row gap-4">
-            <Download size={18} />
+            <UserPlus size={18} />
+            <PdfGenerator />
             <Link
               href={{
                 pathname: `/notes/${selectedNote?.id}`,
@@ -80,7 +83,10 @@ const NoteDetails = ({
           </div>
         ) : null}
       </div>
-      <div className="prose prose-sm text-muted-foreground break-words text-justify mine-markdown">
+      <div
+        className="prose prose-sm text-muted-foreground break-words text-justify mine-markdown"
+        id="content-to-pdf"
+      >
         <ReactMarkdown
           remarkPlugins={[remarkGfm, remarkBreaks]}
           rehypePlugins={[rehypeHighlight]}
