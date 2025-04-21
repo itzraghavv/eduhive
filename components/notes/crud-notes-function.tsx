@@ -5,6 +5,14 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const fetchNotes = async (userId: string, orderBy: string = "title") => {
+  if (!userId) {
+    throw new Error("Invalid userId");
+  }
+
+  const allowedOrderByFields = ["title", "createdAt", "updatedAt"];
+  if (!allowedOrderByFields.includes(orderBy)) {
+    throw new Error(`Invalid orderBy field: ${orderBy}`);
+  }
   try {
     const data = await prisma.note.findMany({
       where: { userId },

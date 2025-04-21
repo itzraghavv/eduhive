@@ -88,13 +88,14 @@ const ToolBar = () => {
       toast.error("Failed to delete the note. Please try again.");
     }
   };
+  if (!selectedNote) return;
 
   return (
     <div
       className="w-[80%] sticky top-0 z-10 flex flex-1 justify-between content-center bg-white p-4"
       // style={{ backgroundColor: "white" }}
     >
-      <h2 className="text-xl font-bold text-primary">{selectedNote?.title}</h2>
+      <h2 className="text-xl font-bold text-primary">{selectedNote.title}</h2>
       <div className="flex flex-row gap-2 items-center justify-center ">
         {/* <Button className="bg-gray-300 hover:bg-gray-100">
           <FolderArchive color="black" strokeWidth={3} size={35} />
@@ -116,9 +117,9 @@ const ToolBar = () => {
 */}
         {/* <Sparkles color="#fb2c36" /> */}
         {/* </Button>  */}
-        <Button>
+        {/* <Button>
           <Edit />
-        </Button>
+        </Button> */}
         <Button onClick={handleDelete}>
           <Trash2 />
         </Button>

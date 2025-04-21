@@ -118,10 +118,6 @@ const NotesList: React.FC<NotesListProps> = ({
         )
     : notes.filter((note) => !note.isArchived);
 
-  useEffect(() => {
-    // bla bla
-  }, [orderBy]);
-
   return (
     <div className="lg:flex-1 flex-col overflow-y-auto mx-auto w-full max-w-3xl bg-white rounded-lg h-80 lg:h-full">
       {/* Search Header */}
@@ -158,7 +154,7 @@ const NotesList: React.FC<NotesListProps> = ({
               handleDeleteNote={handleDeleteNote}
               onClick={() => {
                 setSelectedNote(note);
-                toast("Context Updated");
+                // toast("Context Updated");
               }}
             />
           ))
