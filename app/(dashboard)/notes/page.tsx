@@ -124,13 +124,13 @@ const NotesPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
 
-  const handleArchieveOpen = () => {
-    setIsModalOpen(true); // Open the modal
-  };
+  // const handleArchieveOpen = () => {
+  //   setIsModalOpen(true); // Open the modal
+  // };
 
-  const handleArchieveClose = () => {
-    setIsModalOpen(false); // Close the modal
-  };
+  // const handleArchieveClose = () => {
+  //   setIsModalOpen(false); // Close the modal
+  // };
 
   useEffect(() => {
     if (currentUserId) {
@@ -195,10 +195,10 @@ const NotesPage = () => {
 
         <hr className="w-[30%] mx-auto border-2 border-black rounded-full " />
 
-        <Archieve handleArchieveOpen={handleArchieveOpen} />
+        {/* <Archieve handleArchieveOpen={handleArchieveOpen} /> */}
       </div>
 
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <div className="fixed inset-0 z-50 w-full h-full bg-[#3335] flex items-center justify-center">
           <div className="flex flex-col items-center contents-center w-full max-w-3xl max-h-[50%] bg-white rounded-lg">
             <div className="flex w-[80%] items-center justify-between py-4">
@@ -215,11 +215,11 @@ const NotesPage = () => {
                   .map((note) => (
                     <li key={note.id} className="mb-2">
                       <div className="flex justify-between items-center">
-                        <span className="font-medium">{note.title}</span>
-                        {/* <span className="text-sm text-gray-500">
+                        <span className="font-medium">{note.title}</span> */}
+      {/* <span className="text-sm text-gray-500">
                           {new Date(note.createdAt).toLocaleDateString()}
                         </span> */}
-                      </div>
+      {/* </div>
                     </li>
                   ))
               ) : (
@@ -228,7 +228,7 @@ const NotesPage = () => {
             </ul>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
