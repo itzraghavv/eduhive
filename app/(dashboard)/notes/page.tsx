@@ -97,7 +97,7 @@ const NotesPage = () => {
   // Delete Note function
   const deleteNote_RefreshNote = async (id: string, userId: string) => {
     if (userId) {
-      await handleDeleteNote(id, userId);
+      await handleDeleteNote({ noteId: id, userId: userId });
       await fetchNotes({ userId: userId });
     } else {
       // alert("User ID is undefined");
@@ -156,7 +156,7 @@ const NotesPage = () => {
           <NotesList
             notes={notes}
             currentUserId={currentUserId}
-            handleDeleteNote={deleteNote_RefreshNote}
+            handleDeleteNote={deleteNote_RefreshNote} //TODO
           />
         )}
       </div>

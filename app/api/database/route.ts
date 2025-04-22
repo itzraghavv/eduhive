@@ -19,7 +19,7 @@ export async function GET(req: Request) {
       );
     }
 
-    const notes = await fetchNotes(userId);
+    const notes = await fetchNotes({ userId: userId });
     return NextResponse.json(notes);
   } catch (e) {
     console.log("Failed to fetch Notes : ", e);
@@ -43,7 +43,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const newNote = await createNote({ title, description, userId });
+    const newNote = await createNote({
+      title: title,
+      description: description,
+      userId: userId,
+    });
     return NextResponse.json(newNote);
   } catch (error) {
     return NextResponse.json(
@@ -57,7 +61,7 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const { id, data } = await req.json();
-    const updatedNote = await updateNote(id, data);
+    const updatedNote = await updateNote({ id: id, data: data });
     return NextResponse.json(updatedNote);
   } catch (error) {
     return NextResponse.json(
@@ -76,7 +80,7 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Missing note ID" }, { status: 400 });
     }
 
-    const deletedNote = await deleteNote({ id });
+    const deletedNote = await deleteNote({ noteId: id });
     return NextResponse.json(deletedNote);
   } catch (error) {
     return NextResponse.json(

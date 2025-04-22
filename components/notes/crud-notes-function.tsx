@@ -70,10 +70,10 @@ const createNote = async ({
   return newNote;
 };
 
-const deleteNote = async (id: string): Promise<Note> => {
+const deleteNote = async ({ noteId }: { noteId: string }): Promise<Note> => {
   try {
     const deletedNote = await prisma.note.delete({
-      where: { id },
+      where: { id: noteId },
     });
     return deletedNote;
   } catch (error) {
@@ -89,10 +89,13 @@ type UpdateNoteInput = {
   isArchived?: boolean;
 };
 
-const updateNote = async (
-  id: string,
-  data: UpdateNoteInput = {}
-): Promise<Note> => {
+const updateNote = async ({
+  id,
+  data,
+}: {
+  id: string;
+  data: UpdateNoteInput;
+}): Promise<Note> => {
   const updatedNote = await prisma.note.update({
     where: { id },
     data,

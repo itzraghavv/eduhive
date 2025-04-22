@@ -75,7 +75,13 @@ export function useDB() {
     }
   };
 
-  const handleDeleteNote = async (noteId: string, userId: string) => {
+  const handleDeleteNote = async ({
+    noteId,
+    userId,
+  }: {
+    noteId: string;
+    userId: string;
+  }) => {
     if (!userId) {
       toast.error("User ID is required to delete a note.");
       return;
