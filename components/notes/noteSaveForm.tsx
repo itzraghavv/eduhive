@@ -3,17 +3,31 @@ import { Button } from "@/components/ui/button";
 import { RefObject, useRef } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Info } from "lucide-react";
+import { useDB } from "@/hooks/use-db";
 
 interface NotesFormProps {
   title: string;
-  desc: string;
   setTitle: (value: string) => void;
+  desc: string;
   setDesc: (value: string) => void;
-  saveNote: () => void;
+  saveNote: (params: {
+    currentUserId: string;
+    title: string;
+    desc: string;
+    handleSaveNote: (params: {
+      title: string;
+      description: string;
+      userId: string;
+    }) => Promise<void>;
+    descInputRef: RefObject<HTMLTextAreaElement | null>;
+    fetchNotes: (params: { userId: string }) => Promise<void>;
+  }) => Promise<void>;
+
   loading: boolean;
   error: string | null;
   descInputRef: RefObject<HTMLTextAreaElement | null>;
   previewToggle: (value: boolean) => void;
+  userId: string;
 }
 
 const NotesForm: React.FC<NotesFormProps> = ({
@@ -26,7 +40,9 @@ const NotesForm: React.FC<NotesFormProps> = ({
   error,
   descInputRef,
   previewToggle,
+  userId,
 }) => {
+  const { handleSaveNote, fetchNotes } = useDB();
   return (
     <section className="w-full max-w-3xl shadow-md rounded-lg p-6 mb-4 box-border">
       <h2 className="text-lg text-muted-foreground font-semibold mb-2">
@@ -63,7 +79,14 @@ const NotesForm: React.FC<NotesFormProps> = ({
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            saveNote();
+            saveNote({
+              currentUserId: userId,
+              title: title,
+              desc: desc,
+              handleSaveNote: handleSaveNote,
+              descInputRef: descInputRef,
+              fetchNotes: fetchNotes,
+            });
           }
         }}
       />
@@ -73,7 +96,16 @@ const NotesForm: React.FC<NotesFormProps> = ({
           <Switch onCheckedChange={previewToggle} />
         </div>
         <Button
-          onClick={saveNote}
+          onClick={() =>
+            saveNote({
+              currentUserId: userId,
+              title: title,
+              desc: desc,
+              handleSaveNote: handleSaveNote,
+              descInputRef: descInputRef,
+              fetchNotes: fetchNotes,
+            })
+          }
           disabled={loading}
           className="bg-blue-500 text-white hover:bg-primary-dark flex-1"
         >

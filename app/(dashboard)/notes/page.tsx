@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, RefObject } from "react";
 import { useDB } from "@/hooks/use-db";
 import { toast } from "sonner";
-// import "sonner/dist/sonner.css";
 
 import { useNotesContext } from "@/context/NotesContext";
 
@@ -20,7 +19,7 @@ import NotesList from "@/components/notes/notesList";
 import { NotePreview } from "@/components/notes/NotePreview";
 import { NotesPageLoading } from "@/constants/NoContentHandler";
 
-import { X, ArchiveRestore, Archive } from "lucide-react";
+import { X, ArchiveRestore } from "lucide-react";
 
 // import Modal from "@/components/notes/Archieve";
 
@@ -40,25 +39,36 @@ const NotesPage = () => {
   const [desc, setDesc] = useState("");
   const [previewEnabled, setPreviewEnabled] = useState(false);
 
-  const {
-    notes,
-    loading,
-    fetchLoading,
-    error,
-    handleSaveNote,
-    fetchNotes,
-    handleDeleteNote,
-  } = useDB();
+  const { notes, loading, fetchLoading, error, fetchNotes, handleDeleteNote } =
+    useDB();
 
   const { data: session, status } = useSession();
   const currentUserId = session?.user?.id;
 
-  const { selectedNote, setSelectedNote } = useNotesContext();
+  const { selectedNote } = useNotesContext();
 
   // for enter key press moving
   const descInputRef = useRef<HTMLTextAreaElement>(null);
 
-  const saveNote = async () => {
+  const saveNote = async ({
+    currentUserId,
+    title,
+    desc,
+    handleSaveNote,
+    descInputRef,
+    fetchNotes,
+  }: {
+    currentUserId: string;
+    title: string;
+    desc: string;
+    handleSaveNote: (params: {
+      title: string;
+      description: string;
+      userId: string;
+    }) => Promise<void>;
+    descInputRef: RefObject<HTMLTextAreaElement | null>;
+    fetchNotes: (params: { userId: string }) => Promise<void>;
+  }) => {
     if (!currentUserId) {
       toast.error("No User has been found", {
         description: "User Credentials are absent...",
@@ -152,6 +162,7 @@ const NotesPage = () => {
           error={error}
           descInputRef={descInputRef}
           previewToggle={previewToggle}
+          userId={currentUserId || ""}
         />
 
         <hr className="w-[30%] mx-auto mb-4 border-2 border-black rounded-full" />
@@ -210,9 +221,9 @@ const NotesPage = () => {
                     <li key={note.id} className="mb-2">
                       <div className="flex justify-between items-center">
                         <span className="font-medium">{note.title}</span>
-                        <span className="text-sm text-gray-500">
+                        {/* <span className="text-sm text-gray-500">
                           {new Date(note.createdAt).toLocaleDateString()}
-                        </span>
+                        </span> */}
                       </div>
                     </li>
                   ))
