@@ -14,7 +14,7 @@ type Note = {
   updatedAt: Date;
 };
 
-const fetchNotes = async ({ userId }: { userId: any }) => {
+const fetchNotes = async ({ userId }: { userId: string }) => {
   // Validatiing Params
   if (!userId) {
     throw new Error("Invalid userId");
@@ -27,7 +27,7 @@ const fetchNotes = async ({ userId }: { userId: any }) => {
   // Starting to fetch
   try {
     const data = await prisma.note.findMany({
-      where: { userId },
+      where: { userId: userId },
       orderBy: {
         title: "asc",
       },

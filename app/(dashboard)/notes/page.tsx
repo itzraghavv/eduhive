@@ -95,7 +95,13 @@ const NotesPage = () => {
   };
 
   // Delete Note function
-  const deleteNote_RefreshNote = async (id: string, userId: string) => {
+  const deleteNote_RefreshNote = async ({
+    id,
+    userId,
+  }: {
+    id: string;
+    userId: string;
+  }) => {
     if (userId) {
       await handleDeleteNote({ noteId: id, userId: userId });
       await fetchNotes({ userId: userId });

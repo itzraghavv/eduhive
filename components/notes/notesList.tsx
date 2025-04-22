@@ -9,7 +9,7 @@ import { Input, TextArea } from "../ui/input";
 interface DeleteButtonProps {
   id: string;
   currentUserId: string | undefined;
-  handleDeleteNote: (id: string, userId: string) => void;
+  handleDeleteNote: ({ userId, id }: { userId: string; id: string }) => void;
 }
 
 const DeleteButton: React.FC<DeleteButtonProps> = ({
@@ -21,7 +21,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
     <Button
       onClick={() => {
         if (currentUserId) {
-          handleDeleteNote(id, currentUserId);
+          handleDeleteNote({ id: id, userId: currentUserId });
           console.log("ran fetch notes");
         } else {
           alert("User ID is undefined");
@@ -37,7 +37,7 @@ interface NoteItemProps {
   id: string;
   title: string;
   currentUserId: string | undefined;
-  handleDeleteNote: (id: string, userId: string) => void;
+  handleDeleteNote: ({ userId, id }: { userId: string; id: string }) => void;
   onClick: () => void;
 }
 
@@ -97,7 +97,7 @@ interface NotesListProps {
     isStarred: boolean;
   }[];
   currentUserId: string | undefined;
-  handleDeleteNote: (id: string, userId: string) => void;
+  handleDeleteNote: ({ userId, id }: { userId: string; id: string }) => void;
 }
 
 const NotesList: React.FC<NotesListProps> = ({
