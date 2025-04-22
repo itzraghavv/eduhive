@@ -15,7 +15,7 @@ import {
   NotesLoading,
   Archieve,
 } from "@/components/notes/notesUi";
-import NoteSaveForm from "@/components/notes/NoteSaveForm";
+import NotesForm from "@/components/notes/NoteSaveForm";
 import NotesList from "@/components/notes/notesList";
 import { NotePreview } from "@/components/notes/NotePreview";
 import { NotesPageLoading } from "@/constants/NoContentHandler";
@@ -142,7 +142,7 @@ const NotesPage = () => {
         <NotesPageHeader />
 
         {/* Notes Creating Form */}
-        <NoteSaveForm
+        <NotesForm
           title={title}
           desc={desc}
           setTitle={setTitle}
