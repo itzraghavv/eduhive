@@ -77,10 +77,13 @@ const ToolBar = ({
     }
 
     try {
-      await handleDeleteNote(selectedNote.id, currentUserId); // Delete the note
+      await handleDeleteNote({
+        noteId: selectedNote.id,
+        userId: currentUserId,
+      }); // Delete the note
       toast.success("Note deleted successfully.");
       setSelectedNote(null); // Clear the selected note from context
-      fetchNotes(currentUserId); // Refresh the notes list
+      fetchNotes({ userId: currentUserId }); // Refresh the notes list
       router.back(); // Navigate back to the notes page
     } catch (error) {
       toast.error("Failed to delete the note. Please try again.");
