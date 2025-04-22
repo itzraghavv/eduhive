@@ -39,19 +39,21 @@ export const ChatBox = ({ messages, loading }: ChatBoxProps) => {
           }`}
         >
           <CardContent className="px-3 text-sm mine-markdown">
-            {message.type === "image" && message.url ? (
+            {message.type == "image" && message.url ? (
               <img
                 src={message.url}
                 alt="Uploaded content"
                 className="rounded-lg max-w-xs"
               />
-            ) : (
+            ) : typeof message.content == "string" ? (
               <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkBreaks]}
                 rehypePlugins={[rehypeHighlight]}
               >
-                {message.content || ""}
+                {message.content}
               </ReactMarkdown>
+            ) : (
+              <span>Invalid content</span> // Fallback for non-string content
             )}
           </CardContent>
         </Card>

@@ -10,6 +10,7 @@ import { ImageUpload } from "./upload-img";
 import { useImageUpload } from "@/hooks/use-image-upload";
 
 type Message = {
+  role: "user";
   type: "text" | "image";
   content?: string;
   url?: string;
@@ -34,10 +35,20 @@ export const ChatInput = ({
     e.preventDefault();
 
     if (imageUrl) {
-      onSendMessage({ type: "image", url: imageUrl });
+      onSendMessage({
+        role: "user",
+        type: "image",
+        url: imageUrl,
+        content: "",
+      });
       setImageUrl(null);
     } else if (inputValue.trim()) {
-      onSendMessage({ type: "text", content: inputValue });
+      onSendMessage({
+        role: "user",
+        type: "text",
+        content: inputValue,
+        url: undefined,
+      });
       setInputValue("");
     }
   };
@@ -59,17 +70,17 @@ export const ChatInput = ({
         placeholder="Ask AI..."
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSubmit(e);
-          }
-        }}
+        // onKeyDown={(e) => {
+        //   if (e.key === "Enter" && !e.shiftKey) {
+        //     e.preventDefault();
+        //     handleSubmit(e);
+        //   }
+        // }}
       />
       <div className="flex items-center justify-center space-x-2">
-        <VoiceChat
+        {/* <VoiceChat
           onTranscription={(transcription) => setInputValue(transcription)}
-        />
+        /> */}
         <ImageUpload
           preview={preview}
           uploading={uploading}

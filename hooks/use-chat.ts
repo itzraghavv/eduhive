@@ -9,10 +9,20 @@ export function useChat(initialModel: ModelType = "llama3-8b-8192") {
   >([]);
   const [loading, setLoading] = useState(false);
 
-  const sendMessage = async (message: string) => {
+  const sendMessage = async ({
+    role = "user",
+    type = "text",
+    url,
+    content,
+  }: {
+    role: string;
+    type: string;
+    url: string | undefined;
+    content: string;
+  }) => {
     const updatedMessages = [
       ...messages,
-      { role: "user" as const, content: message },
+      { role: "user" as const, content: content },
     ];
     setMessages(updatedMessages);
     setLoading(true);
