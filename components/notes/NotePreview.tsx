@@ -80,9 +80,9 @@ export const NotePreview = ({
   }, [selectedNote, router]);
 
   return (
-    <div className="flex-1 flex flex-col w-full h-full max-w-3xl rounded-lg shadow-md p-6 overflow-y-auto">
+    <div className="flex-1 flex flex-col w-full h-full max-w-3xl rounded-lg shadow-md p-6 pt-0 overflow-y-auto">
       {/* PREVIEW HEADER TOOLBAR*/}
-      <div className="flex flex-row items-center justify-between mb-4">
+      <div className="sticky top-0 bg-white flex flex-row items-center justify-between mb-4">
         <div className="flex flex-col w-full">
           {previewEnabled ? <Live_Preview_Heading /> : null}
           <h2 className="text-3xl font-bold text-primary">{name}</h2>

@@ -18,6 +18,13 @@ export function useDB() {
   const [fetchLoading, setFetchLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const handleError = (e: any, defaultMessage: string) => {
+    const errorMessage = e.response?.data?.error || defaultMessage;
+    console.error(errorMessage, e);
+    setError(errorMessage);
+    toast.error(defaultMessage, { description: errorMessage });
+  };
+
   const fetchNotes = async (userId: string) => {
     setFetchLoading(true);
     setError(null);
@@ -25,10 +32,7 @@ export function useDB() {
       const response = await axios.get(`/api/database?userId=${userId}`);
       setNotes(response.data);
     } catch (e: any) {
-      toast.error("Failed to fetch notes. Please try again.", {
-        description: e,
-      });
-      setError(e.response?.data?.error || "An Unexpected Error Occurred");
+      handleError(e, "Failed to fetch notes. Please try again.");
     } finally {
       setFetchLoading(false);
     }
@@ -45,8 +49,6 @@ export function useDB() {
   }) => {
     setLoading(true);
     setError(null);
-    const isArchived = false;
-    const isStarred = false;
     try {
       const response = await fetch("/api/database", {
         method: "POST",
@@ -57,8 +59,8 @@ export function useDB() {
           title,
           description,
           userId,
-          isArchived,
-          isStarred,
+          isArchived: false,
+          isStarred: false,
         }),
       });
       if (response.ok) {
@@ -67,11 +69,7 @@ export function useDB() {
         toast.success("Note saved successfully!");
       }
     } catch (e: any) {
-      console.error("Failed to save note:", e);
-      setError(e.response?.data?.error || "An unexpected error occurred");
-      toast.error("Failed to save note. Please try again.", {
-        description: e,
-      });
+      handleError(e, "Failed to save note. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -79,13 +77,15 @@ export function useDB() {
 
   const handleDeleteNote = async (noteId: string, userId: string) => {
     if (!userId) {
-      alert("No user");
+      toast.error("User ID is required to delete a note.");
       return;
     }
+
     const confirmed = window.confirm(
       "Are you sure you want to delete this note?"
     );
     if (!confirmed) return;
+
     try {
       const response = await fetch("/api/database", {
         method: "DELETE",
@@ -100,11 +100,16 @@ export function useDB() {
       }
       toast.success("Note deleted successfully!");
     } catch (e) {
-      console.log("Error deleting note", e);
-      toast.error("Failed to delete note. Please try again.");
+      handleError(e, "Failed to delete note. Please try again.");
     }
   };
 
+  const handleUpdateNote = async (
+    noteId: string,
+    isArchived: boolean,
+    isStarred: boolean,
+    description: string
+  ) => {};
   return {
     notes,
     setNotes,

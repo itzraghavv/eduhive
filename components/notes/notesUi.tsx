@@ -9,6 +9,7 @@ import {
   UserPlus,
   Loader2,
   Download,
+  Save,
 } from "lucide-react";
 
 import { Button } from "../ui/button";
@@ -47,7 +48,17 @@ const NotesLoading = () => {
   );
 };
 
-const ToolBar = () => {
+const ToolBar = ({
+  editing,
+  setEditing,
+  handleEdit,
+  handleUpdateNote,
+}: {
+  editing: boolean;
+  setEditing: (value: boolean) => void;
+  handleEdit: () => void;
+  handleUpdateNote: () => void;
+}) => {
   const router = useRouter();
   const { selectedNote, setSelectedNote } = useNotesContext();
   const { handleDeleteNote, fetchNotes } = useDB();
@@ -104,9 +115,15 @@ const ToolBar = () => {
 */}
         {/* <Sparkles color="#fb2c36" /> */}
         {/* </Button>  */}
-        {/* <Button>
-          <Edit />
-        </Button> */}
+        {editing ? (
+          <Button onClick={handleUpdateNote}>
+            <Save />
+          </Button>
+        ) : (
+          <Button onClick={handleEdit}>
+            <Edit />
+          </Button>
+        )}
         <Button onClick={handleDelete}>
           <Trash2 />
         </Button>
