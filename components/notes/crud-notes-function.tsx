@@ -14,7 +14,7 @@ type Note = {
   updatedAt: Date;
 };
 
-const fetchNotes = async (userId: string) => {
+const fetchNotes = async ({ userId }: { userId: any }) => {
   // Validatiing Params
   if (!userId) {
     throw new Error("Invalid userId");

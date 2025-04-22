@@ -83,7 +83,7 @@ const NotesPage = () => {
       descInputRef.current.style.height = "auto";
     }
 
-    fetchNotes(currentUserId);
+    fetchNotes({ userId: currentUserId });
 
     setTitle("");
     setDesc("");
@@ -98,7 +98,7 @@ const NotesPage = () => {
   const deleteNote_RefreshNote = async (id: string, userId: string) => {
     if (userId) {
       await handleDeleteNote(id, userId);
-      await fetchNotes(userId);
+      await fetchNotes({ userId: userId });
     } else {
       // alert("User ID is undefined");
       toast.error("User Credentials can't be read...");
@@ -117,7 +117,7 @@ const NotesPage = () => {
 
   useEffect(() => {
     if (currentUserId) {
-      fetchNotes(currentUserId);
+      fetchNotes({ userId: currentUserId });
     }
   }, [currentUserId]);
 

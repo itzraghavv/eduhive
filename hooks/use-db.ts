@@ -25,7 +25,7 @@ export function useDB() {
     toast.error(defaultMessage, { description: errorMessage });
   };
 
-  const fetchNotes = async (userId: string) => {
+  const fetchNotes = async ({ userId }: { userId: string }) => {
     setFetchLoading(true);
     setError(null);
     try {
