@@ -47,9 +47,6 @@ const NotesPage = () => {
 
   const { selectedNote } = useNotesContext();
 
-  // for enter key press moving
-  const descInputRef = useRef<HTMLTextAreaElement>(null);
-
   const saveNote = async ({
     currentUserId,
     title,
@@ -99,7 +96,11 @@ const NotesPage = () => {
     setDesc("");
   };
 
-  const previewToggle = () => {
+  const previewToggle = ({
+    setPreviewEnabled,
+  }: {
+    setPreviewEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  }) => {
     setPreviewEnabled((prev) => !prev);
     toast.success("Toggled state");
   };
@@ -160,9 +161,9 @@ const NotesPage = () => {
           saveNote={saveNote}
           loading={loading}
           error={error}
-          descInputRef={descInputRef}
           previewToggle={previewToggle}
-          userId={currentUserId || ""}
+          setPreviewEnabled={setPreviewEnabled}
+          userId={currentUserId}
         />
 
         <hr className="w-[30%] mx-auto mb-4 border-2 border-black rounded-full" />
@@ -208,12 +209,6 @@ const NotesPage = () => {
               </div>
             </div>
             <ul className="list-none overflow-y-auto my-4 w-[80%]">
-              {/* {notes.map((note) => (
-                <li key={note.id} className="mb-2">
-                  {note.title}
-                  {note.createdAt}
-                </li>
-              ))} */}
               {notes.filter((note) => note.isArchived).length >= 0 ? (
                 notes
                   .filter((note) => note.isArchived)
