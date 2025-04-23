@@ -58,11 +58,19 @@ export const useImageUpload = () => {
     }
   };
 
+  // 👇 Add this
+  const clearPreview = () => {
+    setFile(null);
+    setPreview(null);
+    setUploading(false);
+  };
+
   return {
     file,
     preview,
     uploading,
     handleImageChange,
     handleImageUpload,
+    clearPreview, // 👈 Export this
   };
 };
