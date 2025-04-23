@@ -52,9 +52,7 @@ export const ChatBox = ({ messages, loading }: ChatBoxProps) => {
                 remarkPlugins={[remarkGfm, remarkBreaks]}
                 rehypePlugins={[rehypeHighlight]}
               >
-                {typeof message.content === "string"
-                  ? message.content
-                  : (message.content as any)?.content ?? ""}
+                {typeof message.content === "string" ? message.content : (message.content as any)?.content ?? ""}
               </ReactMarkdown>
             )}
           </CardContent>

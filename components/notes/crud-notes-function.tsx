@@ -14,10 +14,7 @@ type Note = {
   updatedAt: Date;
 };
 
-const fetchNotes = async (
-  userId: string
-  // orderBy: string = "title"
-): Promise<Note[]> => {
+const fetchNotes = async ({ userId }: { userId: string }) => {
   // Validatiing Params
   if (!userId) {
     throw new Error("Invalid userId");
@@ -30,7 +27,7 @@ const fetchNotes = async (
   // Starting to fetch
   try {
     const data = await prisma.note.findMany({
-      where: { userId },
+      where: { userId: userId },
       orderBy: {
         title: "asc",
       },
@@ -73,12 +70,11 @@ const createNote = async ({
   return newNote;
 };
 
-const deleteNote = async (id: string): Promise<Note> => {
+const deleteNote = async ({ noteId }: { noteId: string }): Promise<Note> => {
   try {
     const deletedNote = await prisma.note.delete({
-      where: { id },
+      where: { id: noteId },
     });
-
     return deletedNote;
   } catch (error) {
     console.error("Error deleting note:", error);
@@ -89,12 +85,17 @@ const deleteNote = async (id: string): Promise<Note> => {
 type UpdateNoteInput = {
   title?: string;
   description?: string;
+  isStarred?: boolean;
+  isArchived?: boolean;
 };
 
-const updateNote = async (
-  id: string,
-  data: UpdateNoteInput = {}
-): Promise<Note> => {
+const updateNote = async ({
+  id,
+  data,
+}: {
+  id: string;
+  data: UpdateNoteInput;
+}): Promise<Note> => {
   const updatedNote = await prisma.note.update({
     where: { id },
     data,

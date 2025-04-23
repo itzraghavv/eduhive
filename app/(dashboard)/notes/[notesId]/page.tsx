@@ -16,6 +16,7 @@ import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
 import remarkBreaks from "remark-breaks";
 import rehypeHighlight from "rehype-highlight";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { TextArea } from "@/components/ui/input";
 
 const NoteDetailsPage = () => {
   const { selectedNote } = useNotesContext();
@@ -33,6 +34,8 @@ const NoteDetailsPage = () => {
       } catch (e) {
         toast.error("Error going back automatically!");
       }
+    } else {
+      setDesc(selectedNote.description);
     }
   }, [selectedNote, router]);
 
@@ -59,6 +62,20 @@ const NoteDetailsPage = () => {
     }
   };
 
+  const [editing, setEditing] = useState(false);
+  const [desc, setDesc] = useState("");
+
+  const handleEdit = () => {
+    setEditing(true);
+    setDesc(selectedNote.description);
+    toast("Editing");
+  };
+
+  const handleUpdateNote = () => {
+    console.log("Update");
+    setEditing(false);
+  };
+
   useEffect(() => {
     document.addEventListener("mouseup", handleTextSelection);
     return () => {
@@ -68,18 +85,42 @@ const NoteDetailsPage = () => {
 
   return (
     <div className=" flex flex-col flex-1 p-4 border rounded-md shadow-md items-center content-center m-6 min-h-0 h-full">
-      <ToolBar />
+      <ToolBar
+        editing={editing}
+        setEditing={setEditing}
+        handleEdit={handleEdit}
+        handleUpdateNote={handleUpdateNote}
+      />
       <div className="flex items-center justify-center w-[80%] overflow-y-auto">
         <ScrollArea
           className="text-gray-700 mine-markdown w-[80%] p-4 overflow-y-auto max-h-[80vh]"
           ref={descriptionRef}
         >
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm, remarkBreaks]}
-            rehypePlugins={[rehypeHighlight]}
-          >
-            {selectedNote.description}
-          </ReactMarkdown>
+          {editing ? (
+            <>
+              <TextArea
+                // ref={descInputRef}
+                className="flex-1 h-[90vh] z-20  bg-white shadow-2xs focus-visible:ring-0 focus:border-2 rounded-md w-full mb-4 overflow-y-auto max-h-full mine-markdown"
+                placeholder="Enter the details of your note..."
+                value={desc}
+                onChange={(e) => {
+                  setDesc(e.target.value);
+                  const target = e.target as HTMLTextAreaElement;
+                  // target.style.height = "auto";
+                  // target.style.height = `${target.scrollHeight}px`;
+                  // target.style.maxHeight = "50";
+                }}
+              />
+              <Button onClick={() => console.log(desc)} />
+            </>
+          ) : (
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm, remarkBreaks]}
+              rehypePlugins={[rehypeHighlight]}
+            >
+              {selectedNote.description}
+            </ReactMarkdown>
+          )}
         </ScrollArea>
       </div>
 

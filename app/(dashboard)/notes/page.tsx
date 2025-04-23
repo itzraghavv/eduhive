@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, RefObject } from "react";
 import { useDB } from "@/hooks/use-db";
 import { toast } from "sonner";
-// import "sonner/dist/sonner.css";
 
 import { useNotesContext } from "@/context/NotesContext";
 
@@ -15,12 +14,12 @@ import {
   NotesLoading,
   Archieve,
 } from "@/components/notes/notesUi";
-import NoteSaveForm from "@/components/notes/NoteSaveForm";
+import NotesForm from "@/components/notes/NoteSaveForm";
 import NotesList from "@/components/notes/notesList";
 import { NotePreview } from "@/components/notes/NotePreview";
 import { NotesPageLoading } from "@/constants/NoContentHandler";
 
-import { X, ArchiveRestore, Archive } from "lucide-react";
+import { X, ArchiveRestore } from "lucide-react";
 
 // import Modal from "@/components/notes/Archieve";
 
@@ -40,25 +39,33 @@ const NotesPage = () => {
   const [desc, setDesc] = useState("");
   const [previewEnabled, setPreviewEnabled] = useState(false);
 
-  const {
-    notes,
-    loading,
-    fetchLoading,
-    error,
-    handleSaveNote,
-    fetchNotes,
-    handleDeleteNote,
-  } = useDB();
+  const { notes, loading, fetchLoading, error, fetchNotes, handleDeleteNote } =
+    useDB();
 
   const { data: session, status } = useSession();
   const currentUserId = session?.user?.id;
 
-  const { selectedNote, setSelectedNote } = useNotesContext();
+  const { selectedNote } = useNotesContext();
 
-  // for enter key press moving
-  const descInputRef = useRef<HTMLTextAreaElement>(null);
-
-  const saveNote = async () => {
+  const saveNote = async ({
+    currentUserId,
+    title,
+    desc,
+    handleSaveNote,
+    descInputRef,
+    fetchNotes,
+  }: {
+    currentUserId: string;
+    title: string;
+    desc: string;
+    handleSaveNote: (params: {
+      title: string;
+      description: string;
+      userId: string;
+    }) => Promise<void>;
+    descInputRef: RefObject<HTMLTextAreaElement | null>;
+    fetchNotes: (params: { userId: string }) => Promise<void>;
+  }) => {
     if (!currentUserId) {
       toast.error("No User has been found", {
         description: "User Credentials are absent...",
@@ -83,22 +90,32 @@ const NotesPage = () => {
       descInputRef.current.style.height = "auto";
     }
 
-    fetchNotes(currentUserId);
+    fetchNotes({ userId: currentUserId });
 
     setTitle("");
     setDesc("");
   };
 
-  const previewToggle = () => {
+  const previewToggle = ({
+    setPreviewEnabled,
+  }: {
+    setPreviewEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  }) => {
     setPreviewEnabled((prev) => !prev);
     toast.success("Toggled state");
   };
 
   // Delete Note function
-  const deleteNote_RefreshNote = async (id: string, userId: string) => {
+  const deleteNote_RefreshNote = async ({
+    id,
+    userId,
+  }: {
+    id: string;
+    userId: string;
+  }) => {
     if (userId) {
-      await handleDeleteNote(id, userId);
-      await fetchNotes(userId);
+      await handleDeleteNote({ noteId: id, userId: userId });
+      await fetchNotes({ userId: userId });
     } else {
       // alert("User ID is undefined");
       toast.error("User Credentials can't be read...");
@@ -107,17 +124,17 @@ const NotesPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
 
-  const handleArchieveOpen = () => {
-    setIsModalOpen(true); // Open the modal
-  };
+  // const handleArchieveOpen = () => {
+  //   setIsModalOpen(true); // Open the modal
+  // };
 
-  const handleArchieveClose = () => {
-    setIsModalOpen(false); // Close the modal
-  };
+  // const handleArchieveClose = () => {
+  //   setIsModalOpen(false); // Close the modal
+  // };
 
   useEffect(() => {
     if (currentUserId) {
-      fetchNotes(currentUserId);
+      fetchNotes({ userId: currentUserId });
     }
   }, [currentUserId]);
 
@@ -136,7 +153,7 @@ const NotesPage = () => {
         <NotesPageHeader />
 
         {/* Notes Creating Form */}
-        <NoteSaveForm
+        <NotesForm
           title={title}
           desc={desc}
           setTitle={setTitle}
@@ -144,8 +161,9 @@ const NotesPage = () => {
           saveNote={saveNote}
           loading={loading}
           error={error}
-          descInputRef={descInputRef}
           previewToggle={previewToggle}
+          setPreviewEnabled={setPreviewEnabled}
+          userId={currentUserId}
         />
 
         <hr className="w-[30%] mx-auto mb-4 border-2 border-black rounded-full" />
@@ -156,7 +174,7 @@ const NotesPage = () => {
           <NotesList
             notes={notes}
             currentUserId={currentUserId}
-            handleDeleteNote={deleteNote_RefreshNote}
+            handleDeleteNote={deleteNote_RefreshNote} //TODO
           />
         )}
       </div>
@@ -177,10 +195,10 @@ const NotesPage = () => {
 
         <hr className="w-[30%] mx-auto border-2 border-black rounded-full " />
 
-        <Archieve handleArchieveOpen={handleArchieveOpen} />
+        {/* <Archieve handleArchieveOpen={handleArchieveOpen} /> */}
       </div>
 
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <div className="fixed inset-0 z-50 w-full h-full bg-[#3335] flex items-center justify-center">
           <div className="flex flex-col items-center contents-center w-full max-w-3xl max-h-[50%] bg-white rounded-lg">
             <div className="flex w-[80%] items-center justify-between py-4">
@@ -191,23 +209,17 @@ const NotesPage = () => {
               </div>
             </div>
             <ul className="list-none overflow-y-auto my-4 w-[80%]">
-              {/* {notes.map((note) => (
-                <li key={note.id} className="mb-2">
-                  {note.title}
-                  {note.createdAt}
-                </li>
-              ))} */}
               {notes.filter((note) => note.isArchived).length >= 0 ? (
                 notes
                   .filter((note) => note.isArchived)
                   .map((note) => (
                     <li key={note.id} className="mb-2">
                       <div className="flex justify-between items-center">
-                        <span className="font-medium">{note.title}</span>
-                        <span className="text-sm text-gray-500">
+                        <span className="font-medium">{note.title}</span> */}
+      {/* <span className="text-sm text-gray-500">
                           {new Date(note.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
+                        </span> */}
+      {/* </div>
                     </li>
                   ))
               ) : (
@@ -216,7 +228,7 @@ const NotesPage = () => {
             </ul>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
