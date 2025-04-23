@@ -28,10 +28,10 @@ export const ChatInput = ({
   const [inputValue, setInputValue] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const { preview, uploading, handleImageChange } = useImageUpload();
-  console.log(preview, uploading);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("inputValue", inputValue);
 
     if (imageUrl) {
       onSendMessage({ type: "image", url: imageUrl });

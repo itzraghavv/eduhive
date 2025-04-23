@@ -27,6 +27,8 @@ export const ChatBox = ({ messages, loading }: ChatBoxProps) => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  console.log(messages);
+  console.log("messages");
   return (
     <ScrollArea className="flex-1 px-4 py-2 space-y-3 overflow-y-auto scroll-pb-4">
       {messages.map((message, index) => (
@@ -50,7 +52,9 @@ export const ChatBox = ({ messages, loading }: ChatBoxProps) => {
                 remarkPlugins={[remarkGfm, remarkBreaks]}
                 rehypePlugins={[rehypeHighlight]}
               >
-                {message.content || ""}
+                {typeof message.content === "string"
+                  ? message.content
+                  : (message.content as any)?.content ?? ""}
               </ReactMarkdown>
             )}
           </CardContent>
