@@ -4,6 +4,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 import { useNotesContext } from "@/context/NotesContext";
+import {
+  handleRephrase,
+  handleDictionary,
+} from "@/components/notes/ai-operations";
 
 import { Quote, BookA, WandSparkles } from "lucide-react";
 
@@ -17,6 +21,7 @@ import remarkBreaks from "remark-breaks";
 import rehypeHighlight from "rehype-highlight";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TextArea } from "@/components/ui/input";
+import { useChat } from "@/hooks/use-chat";
 
 const NoteDetailsPage = () => {
   const { selectedNote } = useNotesContext();
@@ -26,6 +31,11 @@ const NoteDetailsPage = () => {
     y: number;
   } | null>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
+  const [editing, setEditing] = useState(false);
+  const [desc, setDesc] = useState("");
+  const [userSelection, setUserSelection] = useState("");
+
+  // const { sendMessage } = useChat();
 
   useEffect(() => {
     if (!selectedNote) {
@@ -55,15 +65,14 @@ const NoteDetailsPage = () => {
         descriptionRef.current.contains(selection.anchorNode as Node) &&
         selection.toString().trim()
       ) {
+        console.log("Selection is : \n\n" + selection.toString().trim());
+        setUserSelection(selection.toString().trim());
         setMenuPosition({ x: rect.left + rect.width / 2, y: rect.top - 10 });
       } else {
         setMenuPosition(null);
       }
     }
   };
-
-  const [editing, setEditing] = useState(false);
-  const [desc, setDesc] = useState("");
 
   const handleEdit = () => {
     setEditing(true);
@@ -135,7 +144,12 @@ const NoteDetailsPage = () => {
         >
           <Button
             className="rounded hover:bg-gray-300"
-            onClick={() => toast("Bold action triggered!")}
+            onClick={() =>
+              handleRephrase({
+                selectedContent: userSelection,
+                noteContent: selectedNote.description,
+              })
+            }
           >
             <WandSparkles color={"red"} />
             <span className="text-white font-mono text-xs tracking-wider font-light">
@@ -144,7 +158,12 @@ const NoteDetailsPage = () => {
           </Button>
           <Button
             className="rounded hover:bg-gray-300 bg-blue-500"
-            onClick={() => toast("Italic action triggered!")}
+            onClick={() => {
+              handleDictionary({
+                selectedContent: userSelection,
+                noteContent: selectedNote.description,
+              });
+            }}
           >
             <BookA color={"white"} />
             <span className="text-white font-mono text-xs tracking-wider font-light">

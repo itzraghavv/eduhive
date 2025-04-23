@@ -38,8 +38,8 @@ export const ChatInput = ({
       onSendMessage({
         role: "user",
         type: "image",
-        url: imageUrl,
-        content: "",
+        url: preview ?? undefined,
+        content: inputValue,
       });
       setImageUrl(null);
     } else if (inputValue.trim()) {
@@ -81,11 +81,11 @@ export const ChatInput = ({
         {/* <VoiceChat
           onTranscription={(transcription) => setInputValue(transcription)}
         /> */}
-        <ImageUpload
+        {/* <ImageUpload
           preview={preview}
           uploading={uploading}
           handleImageChange={handleImageChange}
-        />
+        /> */}
       </div>
       <Button onClick={handleSubmit} className="hover:cursor-pointer">
         Send
