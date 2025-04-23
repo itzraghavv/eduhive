@@ -10,29 +10,22 @@ export function useChat(initialModel: ModelType = "llama3-8b-8192") {
   >([]);
   const [loading, setLoading] = useState(false);
 
-  const sendMessage = async ({
-    role = "user",
-    type = "text",
-    url = undefined,
-    content,
-  }: {
-    role: string;
-    type: string;
-    url: string | undefined;
-    content: string;
-  }) => {
+  const sendMessage = async (message: string) => {
     const updatedMessages = [
       ...messages,
-      { role: "user" as const, content: content },
+      { role: "user" as const, content: message },
     ];
     setMessages(updatedMessages);
     setLoading(true);
 
     try {
+      console.log("rheheai");
       const res = await axios.post("/api/chat", {
         messages: updatedMessages,
         model: selectedModel,
       });
+
+      console.log("reached", res);
 
       setMessages([
         ...updatedMessages,

@@ -10,7 +10,6 @@ import { ImageUpload } from "./upload-img";
 import { useImageUpload } from "@/hooks/use-image-upload";
 
 type Message = {
-  role: "user";
   type: "text" | "image";
   content?: string;
   url?: string;
@@ -29,26 +28,16 @@ export const ChatInput = ({
   const [inputValue, setInputValue] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const { preview, uploading, handleImageChange } = useImageUpload();
-  console.log(preview, uploading);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("inputValue", inputValue);
 
     if (imageUrl) {
-      onSendMessage({
-        role: "user",
-        type: "image",
-        url: preview ?? undefined,
-        content: inputValue,
-      });
+      onSendMessage({ type: "image", url: imageUrl });
       setImageUrl(null);
     } else if (inputValue.trim()) {
-      onSendMessage({
-        role: "user",
-        type: "text",
-        content: inputValue,
-        url: undefined,
-      });
+      onSendMessage({ type: "text", content: inputValue });
       setInputValue("");
     }
   };
@@ -70,22 +59,22 @@ export const ChatInput = ({
         placeholder="Ask AI..."
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        // onKeyDown={(e) => {
-        //   if (e.key === "Enter" && !e.shiftKey) {
-        //     e.preventDefault();
-        //     handleSubmit(e);
-        //   }
-        // }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit(e);
+          }
+        }}
       />
       <div className="flex items-center justify-center space-x-2">
-        {/* <VoiceChat
+        <VoiceChat
           onTranscription={(transcription) => setInputValue(transcription)}
-        /> */}
-        {/* <ImageUpload
+        />
+        <ImageUpload
           preview={preview}
           uploading={uploading}
           handleImageChange={handleImageChange}
-        /> */}
+        />
       </div>
       <Button onClick={handleSubmit} className="hover:cursor-pointer">
         Send

@@ -27,6 +27,8 @@ export const ChatBox = ({ messages, loading }: ChatBoxProps) => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  console.log(messages);
+  console.log("messages");
   return (
     <ScrollArea className="flex-1 px-4 py-2 space-y-3 overflow-y-auto scroll-pb-4">
       {messages.map((message, index) => (
@@ -39,21 +41,19 @@ export const ChatBox = ({ messages, loading }: ChatBoxProps) => {
           }`}
         >
           <CardContent className="px-3 text-sm mine-markdown">
-            {message.type == "image" && message.url ? (
+            {message.type === "image" && message.url ? (
               <img
                 src={message.url}
                 alt="Uploaded content"
                 className="rounded-lg max-w-xs"
               />
-            ) : typeof message.content == "string" ? (
+            ) : (
               <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkBreaks]}
                 rehypePlugins={[rehypeHighlight]}
               >
-                {message.content}
+                {typeof message.content === "string" ? message.content : (message.content as any)?.content ?? ""}
               </ReactMarkdown>
-            ) : (
-              <span>Invalid content</span> // Fallback for non-string content
             )}
           </CardContent>
         </Card>

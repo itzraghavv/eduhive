@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.log(err);
     return NextResponse.json(
-      { error: "Failed to fetch from Groq" },
+      { error: "Failed to fetch from Groq" }, 
       { status: 500 }
     );
   }

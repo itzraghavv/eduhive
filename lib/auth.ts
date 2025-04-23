@@ -1,7 +1,6 @@
 import { compare } from "bcrypt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
-import { Session } from "inspector/promises";
 import { SessionStrategy } from "next-auth";
 
 export const authOptions = {

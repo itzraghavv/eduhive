@@ -21,7 +21,6 @@ import remarkBreaks from "remark-breaks";
 import rehypeHighlight from "rehype-highlight";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TextArea } from "@/components/ui/input";
-import { useChat } from "@/hooks/use-chat";
 
 const NoteDetailsPage = () => {
   const { selectedNote } = useNotesContext();
@@ -34,8 +33,6 @@ const NoteDetailsPage = () => {
   const [editing, setEditing] = useState(false);
   const [desc, setDesc] = useState("");
   const [userSelection, setUserSelection] = useState("");
-
-  // const { sendMessage } = useChat();
 
   useEffect(() => {
     if (!selectedNote) {
