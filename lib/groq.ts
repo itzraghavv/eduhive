@@ -5,16 +5,12 @@ const groq = new Groq({
 });
 
 export async function sendMessageToGroq(
-  messages: { role: string; content: any }[], // using `any` for incoming flexibility
+  messages: { role: string; content: any }[], 
   model: string
 ) {
-  // Ensure content is a string
   const sanitizedMessages = messages.map((msg) => ({
     role: msg.role,
-    content:
-      typeof msg.content === "string"
-        ? msg.content
-        : JSON.stringify(msg.content),
+    content: typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content),
   }));
 
   const response = await groq.chat.completions.create({
