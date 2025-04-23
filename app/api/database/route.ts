@@ -61,6 +61,18 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const { id, data } = await req.json();
+
+    // Validate input
+    if (!id) {
+      return NextResponse.json({ error: "Missing note ID" }, { status: 400 });
+    }
+    if (!data || typeof data !== "object") {
+      return NextResponse.json(
+        { error: "Invalid or missing data for update" },
+        { status: 400 }
+      );
+    }
+
     const updatedNote = await updateNote({ id: id, data: data });
     return NextResponse.json(updatedNote);
   } catch (error) {

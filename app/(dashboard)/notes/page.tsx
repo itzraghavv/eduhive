@@ -18,6 +18,7 @@ import NotesForm from "@/components/notes/NoteSaveForm";
 import NotesList from "@/components/notes/notesList";
 import { NotePreview } from "@/components/notes/NotePreview";
 import { NotesPageLoading } from "@/constants/NoContentHandler";
+import { doc } from "@/constants/infoDoc";
 
 import { X, ArchiveRestore } from "lucide-react";
 
@@ -38,6 +39,7 @@ const NotesPage = () => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [previewEnabled, setPreviewEnabled] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const { notes, loading, fetchLoading, error, fetchNotes, handleDeleteNote } =
     useDB();
@@ -161,6 +163,7 @@ const NotesPage = () => {
           saveNote={saveNote}
           loading={loading}
           error={error}
+          setShowInfo={setShowInfo}
           previewToggle={previewToggle}
           setPreviewEnabled={setPreviewEnabled}
           userId={currentUserId}
@@ -181,11 +184,12 @@ const NotesPage = () => {
 
       <div className="flex flex-1 flex-col-reverse w-full max-w-3xl h-full gap-4 px-2">
         {/* <NotesDescription/> */}
+
         {selectedNote || previewEnabled ? (
           <NotePreview
             previewEnabled={previewEnabled}
-            title={title}
-            desc={desc}
+            title={showInfo ? "Info" : title}
+            desc={showInfo ? doc : desc}
           />
         ) : (
           <div className="flex-1 flex w-full h-full max-w-3xl items-center justify-center text-muted-foreground ">

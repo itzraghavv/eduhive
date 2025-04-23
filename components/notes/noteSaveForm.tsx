@@ -4,6 +4,7 @@ import { RefObject, useRef } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Info } from "lucide-react";
 import { useDB } from "@/hooks/use-db";
+import { toast } from "sonner";
 
 interface PreviewToggleProps {
   setPreviewEnabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,6 +31,7 @@ interface NotesFormProps {
   loading: boolean;
   error: string | null;
   // descInputRef: RefObject<HTMLTextAreaElement | null>;
+  setShowInfo: React.Dispatch<React.SetStateAction<boolean>>;
   previewToggle: (props: PreviewToggleProps) => void;
   setPreviewEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   userId: string | undefined;
@@ -44,12 +46,21 @@ const NotesForm: React.FC<NotesFormProps> = ({
   loading,
   error,
   // descInputRef,
+  setShowInfo,
   previewToggle,
   setPreviewEnabled,
   userId,
 }) => {
   const { handleSaveNote, fetchNotes } = useDB();
   const descInputRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleInfoShow = ({
+    setShowInfo,
+  }: {
+    setShowInfo: React.Dispatch<React.SetStateAction<boolean>>;
+  }) => {
+    setShowInfo((prev) => !prev);
+  };
 
   if (!userId) return;
 
@@ -125,7 +136,16 @@ const NotesForm: React.FC<NotesFormProps> = ({
         >
           {loading ? "Saving..." : "Save Note"}
         </Button>
-        <Info />
+        <button
+          // color="transparent"
+          className="bg-transparent"
+          onClick={() => {
+            toast("Info will work in preview mode");
+            handleInfoShow({ setShowInfo });
+          }}
+        >
+          <Info color="black" size={20} />
+        </button>
       </div>
       {error && <p className="text-red-500 mt-2">{error}</p>}
     </section>
