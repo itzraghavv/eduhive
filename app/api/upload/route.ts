@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { chatWithImage } from "@/lib/groq";
+import { toast } from "sonner";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -35,22 +36,35 @@ export async function POST(req: Request) {
     });
 
   if (error) {
+    console.error("Supabase upload error:", error); // Debug log
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
   const publicURL = supabase.storage.from("user-uploads").getPublicUrl(fileName)
     .data.publicUrl;
 
-  await prisma.image.create({
-    data: {
-      url: publicURL,
-      userId: userId,
-      createdAt: new Date(),
-    },
-  });
+  console.log("Public URL:", publicURL); // Debug log
+
+  if (!publicURL) {
+    toast.error("No URL Generated");
+    return NextResponse.json(
+      { error: "Failed to retrieve public URL" },
+      { status: 500 }
+    );
+  }
+  // await prisma.image.create({
+  //   data: {
+  //     url: publicURL,
+  //     userId: userId,
+  //     createdAt: new Date(),
+  //   },
+  // });
 
   // 👉 Now call Groq with prompt + base64 image
-  const aiResult = await chatWithImage(prompt, base64Image);
+  const aiResult = await chatWithImage({
+    prompt: prompt,
+    imageBase64: base64Image,
+  });
 
-  return NextResponse.json({ aiResult, url: publicURL });
+  return NextResponse.json({ aiResult: aiResult, url: publicURL });
 }

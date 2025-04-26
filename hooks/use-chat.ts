@@ -3,14 +3,34 @@ import axios from "axios";
 import { ModelType } from "@/types/model-types";
 import { toast } from "sonner";
 
-export function useChat(initialModel: ModelType = "llama3-8b-8192") {
+const useChat = ({
+  initialModel = "llama3-8b-8192",
+}: // type,
+// url,
+// content,
+{
+  initialModel: ModelType;
+  // type: string;
+  // url: string;
+  // content: string;
+}) => {
   const [selectedModel, setSelectedModel] = useState<ModelType>(initialModel);
   const [messages, setMessages] = useState<
     { role: "user" | "assistant"; content: string }[]
   >([]);
   const [loading, setLoading] = useState(false);
 
-  const sendMessage = async (message: string) => {
+  const sendMessage = async ({
+    type,
+    content,
+    message,
+    url,
+  }: {
+    type: "image" | "text";
+    content: "string";
+    url: "string";
+    message: "string";
+  }) => {
     const updatedMessages = [
       ...messages,
       { role: "user" as const, content: message },
@@ -19,10 +39,14 @@ export function useChat(initialModel: ModelType = "llama3-8b-8192") {
     setLoading(true);
 
     try {
-      console.log("rheheai");
+      // console.log("rheheai");
+
       const res = await axios.post("/api/chat", {
         messages: updatedMessages,
-        model: selectedModel,
+        model:
+          type == "image"
+            ? "meta-llama/llama-4-scout-17b-16e-instruct"
+            : selectedModel,
       });
 
       console.log("reached", res);
@@ -52,9 +76,9 @@ export function useChat(initialModel: ModelType = "llama3-8b-8192") {
     setSelectedModel,
     sendMessage,
   };
-}
+};
 
-export const sendNoteQuery = async ({
+const sendNoteQuery = async ({
   selectedContent,
   noteContent,
   rephrase,
@@ -67,7 +91,7 @@ export const sendNoteQuery = async ({
 
   //  This is a piece of content of above note...which i want to...
   const promptsRephrasing = `rephrase. So please regenerate text that means same.
-   TRY TO MAINTAIN SAME WORD LIMIT AS OF SELECTED NOTE PORTION BUT REPHRASE IT WITH VARIATION.`;
+  TRY TO MAINTAIN SAME WORD LIMIT AS OF SELECTED NOTE PORTION BUT REPHRASE IT WITH VARIATION.`;
   toast.success("sending message to groq model : llama3-8b-8192");
   const messages = [
     {
@@ -105,3 +129,5 @@ export const sendNoteQuery = async ({
 
   return ai_response;
 };
+
+export { useChat, sendNoteQuery };

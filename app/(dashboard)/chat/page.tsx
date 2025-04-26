@@ -9,7 +9,7 @@ import { NoResponse } from "@/components/auth";
 
 export default function ChatPage() {
   const { messages, loading, selectedModel, setSelectedModel, sendMessage } =
-    useChat();
+    useChat({ initialModel: "llama3-8b-8192" });
   const { data: session, status } = useSession();
 
   if (status === "loading") {
@@ -43,8 +43,8 @@ export default function ChatPage() {
           <ChatInput
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
-            // @ts-ignore
             onSendMessage={sendMessage}
+            // @ts-ignore
           />
         </div>
       </div>

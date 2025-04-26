@@ -5,7 +5,8 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ModelSelector } from "./model-selector";
 import { ModelType } from "@/types/model-types";
-import { VoiceChat } from "./voice-chat";
+import { toast } from "sonner";
+// import { VoiceChat } from "./voice-chat";
 import { ImageUpload } from "./upload-img";
 import { useImageUpload } from "@/hooks/use-image-upload";
 import { X } from "lucide-react";
@@ -36,18 +37,24 @@ export const ChatInput = ({
     handleImageUpload,
   } = useImageUpload();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleInputToGroq = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("inputValue", inputValue);
 
-    if (uploading) return; // Prevent sending while uploading
+    if (uploading) {
+      toast("You can send after Image is uploaded");
+      return;
+    }
 
     if (preview) {
       // Wait for the image to upload before sending
       const uploadedUrl = await handleImageUpload();
+      console.log("Uploaded image URL:", uploadedUrl); // Debug log
       if (uploadedUrl) {
         onSendMessage({ type: "image", url: uploadedUrl });
         clearPreview(); // Clear the preview after sending
+      } else {
+        toast.error("Failed to uploaaaaad image.");
       }
     } else if (inputValue.trim()) {
       // Send text message
@@ -70,9 +77,9 @@ export const ChatInput = ({
   return (
     <div className="relative flex gap-x-2 p-4 my-4 bg-muted rounded-lg">
       <ModelSelector selectedModel={selectedModel} onChange={onModelChange} />
-      <div className="absolute -top-20 z-10 w-32 h-32">
+      <div className="absolute -top-50 z-10 w-50 h-50">
         {preview && (
-          <div className="relative w-32 h-32">
+          <div className="relative w-50 h-50">
             <img
               src={preview}
               alt="Preview"
@@ -98,15 +105,15 @@ export const ChatInput = ({
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            handleSubmit(e);
+            handleInputToGroq(e);
           }
         }}
         disabled={uploading}
       />
       <div className="flex items-center justify-center space-x-2">
-        <VoiceChat
+        {/* <VoiceChat
           onTranscription={(transcription) => setInputValue(transcription)}
-        />
+        /> */}
         <ImageUpload
           preview={preview}
           uploading={uploading}
@@ -114,7 +121,7 @@ export const ChatInput = ({
         />
       </div>
       <Button
-        onClick={handleSubmit}
+        onClick={handleInputToGroq}
         className="hover:cursor-pointer"
         disabled={uploading || (!inputValue.trim() && !preview)}
       >

@@ -4,10 +4,13 @@ const groq = new Groq({
   apiKey: process.env.NEXT_PUBLIC_GROQ_API_KEY!,
 });
 
-export async function sendMessageToGroq(
-  messages: { role: string; content: any }[],
-  model: string
-) {
+const sendMessageToGroq = async ({
+  messages,
+  model,
+}: {
+  messages: { role: string; content: any }[];
+  model: string;
+}) => {
   const sanitizedMessages = messages.map((msg) => ({
     role: msg.role,
     content:
@@ -24,11 +27,17 @@ export async function sendMessageToGroq(
   console.log(response);
 
   return response.choices[0]?.message?.content ?? "No response";
-}
+};
 
-export async function chatWithImage(prompt: string, imageBase64: string) {
+const chatWithImage = async ({
+  prompt,
+  imageBase64,
+}: {
+  prompt: string;
+  imageBase64: string;
+}) => {
   const response = await groq.chat.completions.create({
-    model: "llava-1.5-7b",
+    model: "meta-llama/llama-4-scout-17b-16e-instruct",
     messages: [
       {
         role: "user",
@@ -36,7 +45,7 @@ export async function chatWithImage(prompt: string, imageBase64: string) {
           { type: "text", text: prompt },
           {
             type: "image_url",
-            image_url: `data:image/jpeg;base64,${imageBase64}`,
+            image_url: { url: `data:image/jpeg;base64,${imageBase64}` },
           },
         ],
       },
@@ -44,4 +53,6 @@ export async function chatWithImage(prompt: string, imageBase64: string) {
   });
 
   return response;
-}
+};
+
+export { sendMessageToGroq, chatWithImage };

@@ -6,8 +6,6 @@ export const useImageUpload = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
@@ -15,6 +13,7 @@ export const useImageUpload = () => {
     setFile(selectedFile);
     const previewUrl = URL.createObjectURL(selectedFile);
     setPreview(previewUrl);
+    // handleImageUpload();
   };
 
   const handleImageUpload = async (): Promise<string | null> => {
@@ -72,6 +71,6 @@ export const useImageUpload = () => {
     uploading,
     handleImageChange,
     handleImageUpload,
-    clearPreview, 
+    clearPreview,
   };
 };
