@@ -20,7 +20,7 @@ const navItems = [
   //   { icon: ClipboardList, label: "Tasks", href: "/tasks" },
   { icon: BookOpen, label: "Notes", href: "/notes" },
   { icon: MessageSquare, label: "Chat", href: "/chat" },
-  { icon: Users, label: "Friends", href: "/friends" },
+  { icon: Users, label: "Video Summary", href: "/video-summary" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
