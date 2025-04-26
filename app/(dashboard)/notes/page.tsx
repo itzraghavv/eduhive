@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState, useRef, RefObject } from "react";
-import { useDB } from "@/hooks/use-db";
 import { toast } from "sonner";
+
+// for starring n archiving notes
+import { useDB } from "@/hooks/use-db";
 
 import { useNotesContext } from "@/context/NotesContext";
 
@@ -17,6 +19,7 @@ import {
 import NotesForm from "@/components/notes/NoteSaveForm";
 import NotesList from "@/components/notes/notesList";
 import { NotePreview } from "@/components/notes/NotePreview";
+import { Button } from "@/components/ui/button";
 import { NotesPageLoading } from "@/constants/NoContentHandler";
 import { doc } from "@/constants/infoDoc";
 
@@ -41,8 +44,15 @@ const NotesPage = () => {
   const [previewEnabled, setPreviewEnabled] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
 
-  const { notes, loading, fetchLoading, error, fetchNotes, handleDeleteNote } =
-    useDB();
+  const {
+    notes,
+    loading,
+    fetchLoading,
+    error,
+    fetchNotes,
+    handleDeleteNote,
+    handleUpdateNote,
+  } = useDB();
 
   const { data: session, status } = useSession();
   const currentUserId = session?.user?.id;
@@ -92,7 +102,7 @@ const NotesPage = () => {
       descInputRef.current.style.height = "auto";
     }
 
-    fetchNotes({ userId: currentUserId });
+    await fetchNotes({ userId: currentUserId });
 
     setTitle("");
     setDesc("");
@@ -132,6 +142,53 @@ const NotesPage = () => {
 
   const handleArchieveClose = () => {
     setIsModalOpen(false); // Close the modal
+  };
+
+  const handleArchiveNote = async ({
+    noteId,
+    isArchived,
+  }: {
+    noteId: string;
+    isArchived: boolean;
+  }) => {
+    if (!selectedNote) return;
+
+    try {
+      await handleUpdateNote({
+        noteId: noteId,
+        updates: { isArchived: true },
+      });
+
+      toast.success(
+        `Note ${!isArchived ? "archived" : "unarchived"} successfully!`
+      );
+    } catch (error) {
+      toast.error("Failed to update note. Please try again.");
+    }
+  };
+
+  const handleUnarchiveNote = async ({ noteId }: { noteId: string }) => {
+    if (!noteId) {
+      toast.error("No Note ID detected");
+      return;
+    }
+    if (!currentUserId) {
+      toast.error("No User ID detected");
+      return;
+    }
+
+    toast("Unarchiving Note");
+    try {
+      await handleUpdateNote({
+        noteId: noteId,
+        updates: { isArchived: false },
+      });
+
+      toast.success("Note unarchived successfully!");
+      await fetchNotes({ userId: currentUserId });
+    } catch (error) {
+      toast.error("Failed to update note. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -177,7 +234,8 @@ const NotesPage = () => {
           <NotesList
             notes={notes}
             currentUserId={currentUserId}
-            handleDeleteNote={deleteNote_RefreshNote} //TODO
+            handleDeleteNote={deleteNote_RefreshNote}
+            handleArchiveNote={handleArchiveNote}
           />
         )}
       </div>
@@ -208,18 +266,32 @@ const NotesPage = () => {
             <div className="flex w-[80%] items-center justify-between py-4">
               <h2 className="text-xl font-bold py-2">Archived Notes</h2>
               <div className="flex flex-row gap-4 items-center justify-around">
-                <ArchiveRestore color={"black"} strokeWidth={2} size={20} />
                 <X onClick={handleArchieveClose} strokeWidth={2} />
               </div>
             </div>
             <ul className="list-none overflow-y-auto my-4 w-[80%]">
-              {notes.filter((note) => note.isArchived).length >= 0 ? (
+              {notes.filter((note) => note.isArchived).length > 0 ? (
                 notes
                   .filter((note) => note.isArchived)
                   .map((note) => (
                     <li key={note.id} className="mb-2">
                       <div className="flex justify-between items-center">
                         <span className="font-medium">{note.title}</span>
+                        <Button
+                          onClick={async () => {
+                            try {
+                              await handleUnarchiveNote({ noteId: note.id });
+                            } catch (error) {
+                              console.error("Error unarchiving note:", error);
+                            }
+                          }}
+                        >
+                          <ArchiveRestore
+                            color={"white"}
+                            strokeWidth={2}
+                            size={20}
+                          />
+                        </Button>
                         {/* <span className="text-sm text-gray-500">
                           {new Date(note.createdAt).toLocaleDateString()}
                         </span> */}

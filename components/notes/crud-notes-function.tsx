@@ -19,10 +19,6 @@ const fetchNotes = async ({ userId }: { userId: string }) => {
   if (!userId) {
     throw new Error("Invalid userId");
   }
-  // const allowedOrderByFields = ["title", "createdAt", "updatedAt"];
-  // if (!allowedOrderByFields.includes(orderBy)) {
-  //   throw new Error(`Invalid orderBy field: ${orderBy}`);
-  // }
 
   // Starting to fetch
   try {
@@ -45,7 +41,27 @@ const fetchNotes = async ({ userId }: { userId: string }) => {
     return data || [];
   } catch (error) {
     console.error("Error fetching notes:", error);
-    throw new Error("Failed to fetch notes");
+    // throw new Error("Failed to fetch notes");
+  }
+};
+
+const fetchNoteById = async ({ noteId }: { noteId: string }) => {
+  try {
+    const note = await prisma.note.findUnique({
+      where: { id: noteId },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        isArchived: true,
+        isStarred: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return note;
+  } catch (e) {
+    console.error("Error fetching Note by ID : ", e);
   }
 };
 
@@ -96,11 +112,16 @@ const updateNote = async ({
   id: string;
   data: UpdateNoteInput;
 }): Promise<Note> => {
-  const updatedNote = await prisma.note.update({
-    where: { id },
-    data,
-  });
-  return updatedNote;
+  try {
+    const updatedNote = await prisma.note.update({
+      where: { id },
+      data,
+    });
+    return updatedNote;
+  } catch (error) {
+    console.error("Error updating note:", error);
+    throw new Error("Failed to update note");
+  }
 };
 
-export { fetchNotes, createNote, deleteNote, updateNote };
+export { fetchNotes, fetchNoteById, createNote, deleteNote, updateNote };

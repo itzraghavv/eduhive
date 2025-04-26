@@ -17,6 +17,7 @@ export function useDB() {
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // const [updateLoading, setUpdateLoading] =useState(false);
 
   const handleError = (e: any, defaultMessage: string) => {
     const errorMessage = e.response?.data?.error || defaultMessage;
@@ -66,6 +67,7 @@ export function useDB() {
       if (response.ok) {
         const newNote = await response.json();
         setNotes((prevNotes) => [...prevNotes, newNote]);
+        await fetchNotes({ userId });
         toast.success("Note saved successfully!");
       }
     } catch (e: any) {
@@ -110,19 +112,48 @@ export function useDB() {
     }
   };
 
-  const handleUpdateNote = async (
-    noteId: string,
-    isArchived: boolean,
-    isStarred: boolean,
-    description: string
-  ) => {};
+  const handleUpdateNote = async ({
+    noteId,
+    updates,
+  }: {
+    noteId: string;
+    updates: Partial<Pick<Note, "description" | "isArchived" | "isStarred">>;
+  }) => {
+    setError(null);
+
+    try {
+      const response = await fetch("/api/database", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: noteId,
+          data: updates,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update note");
+      }
+
+      const updatedNote = await response.json();
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === noteId ? { ...note, ...updatedNote } : note
+        )
+      );
+      toast.success("Note updated successfully!");
+    } catch (e: any) {
+      handleError(e, "Failed to update note. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     notes,
     setNotes,
-    // title,
-    // desc,
-    // setTitle,
-    // setDesc,
     loading,
     error,
     fetchLoading,
@@ -130,5 +161,6 @@ export function useDB() {
     fetchNotes,
     handleDeleteNote,
     handleSaveNote,
+    handleUpdateNote,
   };
 }

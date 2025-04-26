@@ -1,5 +1,6 @@
 import {
   fetchNotes,
+  fetchNoteById,
   createNote,
   deleteNote,
   updateNote,
@@ -73,8 +74,20 @@ export async function PUT(req: Request) {
       );
     }
 
-    const updatedNote = await updateNote({ id: id, data: data });
-    return NextResponse.json(updatedNote);
+    // Fetch the existing note
+    const existingNote = await fetchNoteById({ noteId: id });
+    if (!existingNote) {
+      return NextResponse.json({ error: "Note not found" }, { status: 404 });
+    }
+
+    // Merge updates with the existing note
+    const updatedNote = { ...existingNote, ...data };
+
+    // const updatedNote = await updateNote({ id: id, data: data });
+
+    // Update the note in the database
+    const result = await updateNote({ id, data: updatedNote });
+    return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to update note" },

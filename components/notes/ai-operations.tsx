@@ -17,13 +17,20 @@ export const handleDictionary = async ({
     return;
   }
 
-  const response = sendNoteQuery({
-    selectedContent: selectedContent,
-    noteContent: noteContent,
-    rephrase: false,
-  });
+  try {
+    const response = await sendNoteQuery({
+      selectedContent: selectedContent,
+      noteContent: noteContent,
+      rephrase: false,
+    });
 
-  console.log("AIRESPONSE : ", response);
+    console.log("AI Response (Dictionary):", response);
+    return response; // Return the response to the caller
+  } catch (error) {
+    console.error("Error in handleDictionary:", error);
+    toast.error("Failed to fetch dictionary response.");
+    return null;
+  }
 };
 
 export const handleRephrase = async ({
@@ -42,10 +49,18 @@ export const handleRephrase = async ({
     return;
   }
 
-  const response = sendNoteQuery({
-    selectedContent: selectedContent,
-    noteContent: noteContent,
-    rephrase: true,
-  });
-  console.log("AIRESPONSE : ", response);
+  try {
+    const response = await sendNoteQuery({
+      selectedContent: selectedContent,
+      noteContent: noteContent,
+      rephrase: true,
+    });
+
+    console.log("AI Response (Rephrase):", response);
+    return response; // Return the response to the caller
+  } catch (error) {
+    console.error("Error in handleRephrase:", error);
+    toast.error("Failed to fetch rephrase response.");
+    return null;
+  }
 };

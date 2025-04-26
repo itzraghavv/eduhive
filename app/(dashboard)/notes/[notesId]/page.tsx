@@ -14,6 +14,8 @@ import { Quote, BookA, WandSparkles } from "lucide-react";
 import { ToolBar } from "@/components/notes/notesUi";
 import { Button } from "@/components/ui/button";
 
+// for handling note update
+import { useDB } from "@/hooks/use-db";
 // For Markdown
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // GitHub Flavored Markdown
@@ -23,6 +25,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { TextArea } from "@/components/ui/input";
 
 const NoteDetailsPage = () => {
+  const { handleUpdateNote } = useDB();
   const { selectedNote } = useNotesContext();
   const router = useRouter();
   const [menuPosition, setMenuPosition] = useState<{
@@ -77,9 +80,24 @@ const NoteDetailsPage = () => {
     toast("Editing");
   };
 
-  const handleUpdateNote = () => {
-    console.log("Update");
-    setEditing(false);
+  const handleUpdateNoteLocal = async () => {
+    if (!selectedNote) return;
+
+    try {
+      await handleUpdateNote({
+        noteId: selectedNote.id,
+        // isArchived: selectedNote.isArchived,
+        // isStarred: selectedNote.isStarred,
+        // description: desc,
+        updates: { description: desc },
+      });
+      toast.success("Note updated successfully!", {
+        description: "Changes will be live on Next Refresh.",
+      });
+      setEditing(false);
+    } catch (error) {
+      toast.error("Failed to update note. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -95,7 +113,7 @@ const NoteDetailsPage = () => {
         editing={editing}
         setEditing={setEditing}
         handleEdit={handleEdit}
-        handleUpdateNote={handleUpdateNote}
+        handleUpdateNote={handleUpdateNoteLocal}
       />
       <div className="flex items-center justify-center w-[80%] overflow-y-auto">
         <ScrollArea
@@ -103,22 +121,19 @@ const NoteDetailsPage = () => {
           ref={descriptionRef}
         >
           {editing ? (
-            <>
-              <TextArea
-                // ref={descInputRef}
-                className="flex-1 h-[90vh] z-20  bg-white shadow-2xs focus-visible:ring-0 focus:border-2 rounded-md w-full mb-4 overflow-y-auto max-h-full mine-markdown"
-                placeholder="Enter the details of your note..."
-                value={desc}
-                onChange={(e) => {
-                  setDesc(e.target.value);
-                  const target = e.target as HTMLTextAreaElement;
-                  // target.style.height = "auto";
-                  // target.style.height = `${target.scrollHeight}px`;
-                  // target.style.maxHeight = "50";
-                }}
-              />
-              <Button onClick={() => console.log(desc)} />
-            </>
+            <TextArea
+              // ref={descInputRef}
+              className="flex-1 h-[90vh] z-20  bg-white shadow-2xs focus-visible:ring-0 focus:border-2 rounded-md w-full mb-4 overflow-y-auto max-h-full mine-markdown"
+              placeholder="Enter the details of your note..."
+              value={desc}
+              onChange={(e) => {
+                setDesc(e.target.value);
+                const target = e.target as HTMLTextAreaElement;
+                // target.style.height = "auto";
+                // target.style.height = `${target.scrollHeight}px`;
+                // target.style.maxHeight = "50";
+              }}
+            />
           ) : (
             <ReactMarkdown
               remarkPlugins={[remarkGfm, remarkBreaks]}
@@ -141,12 +156,15 @@ const NoteDetailsPage = () => {
         >
           <Button
             className="rounded hover:bg-gray-300"
-            onClick={() =>
-              handleRephrase({
+            onClick={async () => {
+              const response = await handleRephrase({
                 selectedContent: userSelection,
                 noteContent: selectedNote.description,
-              })
-            }
+              });
+              if (response) {
+                console.log("Rephrase Response:", response);
+              }
+            }}
           >
             <WandSparkles color={"red"} />
             <span className="text-white font-mono text-xs tracking-wider font-light">
@@ -155,11 +173,14 @@ const NoteDetailsPage = () => {
           </Button>
           <Button
             className="rounded hover:bg-gray-300 bg-blue-500"
-            onClick={() => {
-              handleDictionary({
+            onClick={async () => {
+              const response = await handleDictionary({
                 selectedContent: userSelection,
                 noteContent: selectedNote.description,
               });
+              if (response) {
+                console.log("Dictionary Response:", response);
+              }
             }}
           >
             <BookA color={"white"} />

@@ -6,6 +6,8 @@ interface Note {
   // user: string;
   id: string;
   title: string;
+  isArchived: boolean;
+  isStarred: boolean;
   description: string;
 }
 
