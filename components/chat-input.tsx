@@ -28,19 +28,31 @@ export const ChatInput = ({
 }: ChatInputProps) => {
   const [inputValue, setInputValue] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const { preview, uploading, handleImageChange, clearPreview } =
-    useImageUpload();
+  const {
+    preview,
+    uploading,
+    handleImageChange,
+    clearPreview,
+    handleImageUpload,
+  } = useImageUpload();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("inputValue", inputValue);
 
-    if (imageUrl) {
-      onSendMessage({ type: "image", url: imageUrl });
-      setImageUrl(null);
+    if (uploading) return; // Prevent sending while uploading
+
+    if (preview) {
+      // Wait for the image to upload before sending
+      const uploadedUrl = await handleImageUpload();
+      if (uploadedUrl) {
+        onSendMessage({ type: "image", url: uploadedUrl });
+        clearPreview(); // Clear the preview after sending
+      }
     } else if (inputValue.trim()) {
+      // Send text message
       onSendMessage({ type: "text", content: inputValue });
-      setInputValue("");
+      setInputValue(""); // Clear the input field after sending
     }
   };
 
@@ -89,6 +101,7 @@ export const ChatInput = ({
             handleSubmit(e);
           }
         }}
+        disabled={uploading}
       />
       <div className="flex items-center justify-center space-x-2">
         <VoiceChat
@@ -100,7 +113,11 @@ export const ChatInput = ({
           handleImageChange={handleImageChange}
         />
       </div>
-      <Button onClick={handleSubmit} className="hover:cursor-pointer">
+      <Button
+        onClick={handleSubmit}
+        className="hover:cursor-pointer"
+        disabled={uploading || (!inputValue.trim() && !preview)}
+      >
         Send
       </Button>
     </div>

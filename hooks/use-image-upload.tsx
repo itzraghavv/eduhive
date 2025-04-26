@@ -6,6 +6,8 @@ export const useImageUpload = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
+  
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
@@ -58,7 +60,6 @@ export const useImageUpload = () => {
     }
   };
 
-  // 👇 Add this
   const clearPreview = () => {
     setFile(null);
     setPreview(null);
@@ -71,6 +72,6 @@ export const useImageUpload = () => {
     uploading,
     handleImageChange,
     handleImageUpload,
-    clearPreview, // 👈 Export this
+    clearPreview, 
   };
 };
