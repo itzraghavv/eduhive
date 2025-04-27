@@ -16,7 +16,7 @@ import {
   NotesLoading,
   Archieve,
 } from "@/components/notes/notesUi";
-import NotesForm from "@/components/notes/NoteSaveForm";
+import NotesForm from "@/components/notes/noteSaveForm";
 import NotesList from "@/components/notes/notesList";
 import { NotePreview } from "@/components/notes/NotePreview";
 import { Button } from "@/components/ui/button";
