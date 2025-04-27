@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { SignUpSchema } from "@/lib/validators";
 import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export const SignUp = () => {
   const [username, setUsername] = useState("");
@@ -13,8 +14,21 @@ export const SignUp = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const { data: session, status } = useSession();
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (status && session?.user) {
+      const defaultData = {
+        username: session.user.name || username,
+        email: session.user.email || password,
+        bio: "Hey there! I'm using EduHive.",
+        image: "",
+      };
+      localStorage.setItem("user", JSON.stringify(defaultData));
+    }
+  }, [session, status]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
