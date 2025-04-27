@@ -48,7 +48,7 @@ The real-world value: democratizing quality education with easy-to-use tools for
 - Hosting: Vercel
 
 ### Sponsor Technologies Used (if any):
-- ✅  **Groq:** _How you used Groq_  
+  ✅  **Groq:** _How you used Groq_  
 - [ ] **Monad:** _Your blockchain implementation_  
 - [ ] **Fluvio:** _Real-time data handling_  
 - [ ] **Base:** _AgentKit / OnchainKit / Smart Wallet usage_  
@@ -72,8 +72,8 @@ Add images, GIFs, or screenshots if helpful!
 
 ## 📽️ Demo & Deliverables
 
-Demo Video Link: [View Demo](https://youtu.be/euP7ss4KQlk)
-Pitch Deck / PPT Link: [View Pitch Deck]()
+- Demo Video Link: [View Demo](https://youtu.be/euP7ss4KQlk)
+- Pitch Deck / PPT Link: [View Pitch Deck]()
 
 ---
 
