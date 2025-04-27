@@ -27,29 +27,43 @@ const useChat = ({
     url,
   }: {
     type: "image" | "text";
-    content: "string";
-    url: "string";
-    message: "string";
+    content: string;
+    url: string;
+    message: string;
   }) => {
     const updatedMessages = [
       ...messages,
       { role: "user" as const, content: message },
     ];
+
+    console.log("Updated messages before sending:", updatedMessages); // Debug log
+
     setMessages(updatedMessages);
     setLoading(true);
 
     try {
       // console.log("rheheai");
 
-      const res = await axios.post("/api/chat", {
+      // const res = await axios.post("/api/chat", {
+      //   messages: updatedMessages,
+      //   model:
+      //     type == "image"
+      //       ? "meta-llama/llama-4-scout-17b-16e-instruct"
+      //       : selectedModel,
+      //   // model: selectedModel,
+      // });
+      const payload = {
         messages: updatedMessages,
         model:
-          type == "image"
+          type === "image"
             ? "meta-llama/llama-4-scout-17b-16e-instruct"
             : selectedModel,
-      });
+      };
+      console.log("Payload being sent to /api/chat:", payload); // Debug log
 
-      console.log("reached", res);
+      const res = await axios.post("/api/chat", payload);
+
+      console.log("Response from /api/chat:", res.data); // Debug log
 
       setMessages([
         ...updatedMessages,
