@@ -19,7 +19,17 @@ type Message = {
 interface ChatInputProps {
   selectedModel: ModelType;
   onModelChange: (model: ModelType) => void;
-  onSendMessage: (message: Message) => void;
+  onSendMessage: ({
+    type,
+    content,
+    message,
+    url,
+  }: {
+    type: "text" | "image";
+    content?: string;
+    message?: string;
+    url?: string;
+  }) => void;
 }
 
 export const ChatInput = ({
@@ -45,19 +55,40 @@ export const ChatInput = ({
     }
 
     if (preview) {
+
       // Image selected
       const uploadedUrl = await handleImageUpload(inputValue); // 👈 pass the prompt (inputValue)
       if (uploadedUrl) {
         onSendMessage({ type: "image", url: uploadedUrl });
         clearPreview();
         setInputValue(""); // Also clear inputValue after sending image
+
+      const uploadedUrl = await handleImageUpload();
+      console.log("Uploaded image URL:", uploadedUrl); // Debug log
+
+      if (uploadedUrl) {
+        console.log("Sending image prompt with URL:", uploadedUrl); // Debug log
+
+        onSendMessage({
+          type: "image",
+          url: uploadedUrl,
+          message: "Image prompt",
+        });
+        clearPreview(); // Clear the preview after sending
+
       } else {
         toast.error("Failed to upload image.");
       }
     } else if (inputValue.trim()) {
+
       // Text only
       onSendMessage({ type: "text", content: inputValue });
       setInputValue("");
+
+      console.log("Sending text prompt:", inputValue); // Debug log
+
+      onSendMessage({ type: "text", content: inputValue, message: inputValue });
+      setInputValue(""); // Clear the input field after sending
     }
   };
 

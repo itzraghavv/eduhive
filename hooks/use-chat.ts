@@ -20,6 +20,7 @@ const useChat = ({
   >([]);
   const [loading, setLoading] = useState(false);
 
+
   const sendMessage = async ({ type, content, url }: Message) => {
     const userMessage =
       type === "text" ? content ?? "" : "Here is the image to analyze."; // or any prompt you want
@@ -29,22 +30,62 @@ const useChat = ({
       return;
     }
 
+
+  const sendMessage = async ({
+    type,
+    content,
+    message,
+    url,
+  }: {
+    type: "image" | "text";
+    content: string;
+    url: string;
+    message: string;
+  }) => {
+
     const updatedMessages = [
       ...messages,
       { role: "user" as const, content: userMessage },
     ];
+
+    console.log("Updated messages before sending:", updatedMessages); // Debug log
+
     setMessages(updatedMessages);
     setLoading(true);
 
     try {
+
       const res = await axios.post("/api/chat", {
+
+      // console.log("rheheai");
+
+      // const res = await axios.post("/api/chat", {
+      //   messages: updatedMessages,
+      //   model:
+      //     type == "image"
+      //       ? "meta-llama/llama-4-scout-17b-16e-instruct"
+      //       : selectedModel,
+      //   // model: selectedModel,
+      // });
+      const payload = {
+
         messages: updatedMessages,
         model:
           type === "image"
             ? "meta-llama/llama-4-scout-17b-16e-instruct"
             : selectedModel,
+
         file_urls: type === "image" && url ? [url] : undefined, // 🔥 ADD THIS!
       });
+
+
+      };
+      console.log("Payload being sent to /api/chat:", payload); // Debug log
+
+      const res = await axios.post("/api/chat", payload);
+
+      console.log("Response from /api/chat:", res.data); // Debug log
+
 
       setMessages([
         ...updatedMessages,

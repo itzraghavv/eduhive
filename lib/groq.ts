@@ -3,6 +3,9 @@ import Groq from "groq-sdk";
 const groq = new Groq({
   apiKey: process.env.NEXT_PUBLIC_GROQ_API_KEY!,
 });
+if (!process.env.NEXT_PUBLIC_GROQ_API_KEY) {
+  console.error("Groq API key is missing!"); // Debug log
+}
 
 const sendMessageToGroq = async ({
   messages,
@@ -19,6 +22,9 @@ const sendMessageToGroq = async ({
         ? msg.content
         : JSON.stringify(msg.content),
   }));
+
+  console.log("Sanitized messages:", sanitizedMessages); // Debug log
+  console.log("Model:", model); // Debug log
 
   const response = await groq.chat.completions.create({
     model,
