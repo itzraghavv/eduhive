@@ -36,10 +36,8 @@ export const ChatInput = ({
     clearPreview,
     handleImageUpload,
   } = useImageUpload();
-
   const handleInputToGroq = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("inputValue", inputValue);
 
     if (uploading) {
       toast("You can send after Image is uploaded");
@@ -47,19 +45,19 @@ export const ChatInput = ({
     }
 
     if (preview) {
-      // Wait for the image to upload before sending
-      const uploadedUrl = await handleImageUpload();
-      console.log("Uploaded image URL:", uploadedUrl); // Debug log
+      // Image selected
+      const uploadedUrl = await handleImageUpload(inputValue); // 👈 pass the prompt (inputValue)
       if (uploadedUrl) {
         onSendMessage({ type: "image", url: uploadedUrl });
-        clearPreview(); // Clear the preview after sending
+        clearPreview();
+        setInputValue(""); // Also clear inputValue after sending image
       } else {
-        toast.error("Failed to uploaaaaad image.");
+        toast.error("Failed to upload image.");
       }
     } else if (inputValue.trim()) {
-      // Send text message
+      // Text only
       onSendMessage({ type: "text", content: inputValue });
-      setInputValue(""); // Clear the input field after sending
+      setInputValue("");
     }
   };
 

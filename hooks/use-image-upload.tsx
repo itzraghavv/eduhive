@@ -12,23 +12,25 @@ export const useImageUpload = () => {
 
     setFile(selectedFile);
     const previewUrl = URL.createObjectURL(selectedFile);
-    setPreview(previewUrl);
-    // handleImageUpload();
+    setPreview(previewUrl); // Show the preview immediately
   };
 
-  const handleImageUpload = async (): Promise<string | null> => {
+  const handleImageUpload = async (
+    prompt: string = ""
+  ): Promise<string | null> => {
     if (!file) {
       toast.error("No image selected!");
       return null;
     }
 
-    setUploading(true);
+    setUploading(true); // Set uploading state to true while the image is being uploaded
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", file); // Make sure file is appended properly
+    formData.append("prompt", prompt); // Make sure prompt is appended properly
 
     try {
-      const res = await fetch("/api/upload", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         body: formData,
       });
@@ -43,9 +45,7 @@ export const useImageUpload = () => {
 
       if (imageUrl) {
         toast.success("Image uploaded successfully!");
-        setFile(null);
-        setPreview(null);
-        return imageUrl;
+        return imageUrl; // Return the URL of the uploaded image
       } else {
         toast.error("No image URL returned.");
         return null;
@@ -55,7 +55,9 @@ export const useImageUpload = () => {
       toast.error("Something went wrong during upload.");
       return null;
     } finally {
-      setUploading(false);
+      setUploading(false); // Set uploading to false after the request is complete
+      setFile(null); // Clear the file after upload
+      setPreview(null); // Clear the preview after upload
     }
   };
 

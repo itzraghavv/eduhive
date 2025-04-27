@@ -11,6 +11,7 @@ const sendMessageToGroq = async ({
   messages: { role: string; content: any }[];
   model: string;
 }) => {
+  console.log("sending msg");
   const sanitizedMessages = messages.map((msg) => ({
     role: msg.role,
     content:
@@ -24,35 +25,45 @@ const sendMessageToGroq = async ({
     messages: sanitizedMessages,
   });
 
-  console.log(response);
-
   return response.choices[0]?.message?.content ?? "No response";
 };
 
 const chatWithImage = async ({
   prompt,
-  imageBase64,
+  imageUrl,
 }: {
   prompt: string;
-  imageBase64: string;
+  imageUrl: string;
 }) => {
-  const response = await groq.chat.completions.create({
-    model: "meta-llama/llama-4-scout-17b-16e-instruct",
+  console.log("sending image to groq");
+
+  const chatCompletion = await groq.chat.completions.create({
     messages: [
       {
         role: "user",
         content: [
-          { type: "text", text: prompt },
+          {
+            type: "text",
+            text: prompt,
+          },
           {
             type: "image_url",
-            image_url: { url: `data:image/jpeg;base64,${imageBase64}` },
+            image_url: {
+              url: imageUrl,
+            },
           },
         ],
       },
     ],
+    model: "meta-llama/llama-4-scout-17b-16e-instruct",
+    temperature: 1,
+    max_completion_tokens: 1024,
+    top_p: 1,
+    stream: false,
+    stop: null,
   });
 
-  return response;
+  return chatCompletion;
 };
 
 export { sendMessageToGroq, chatWithImage };

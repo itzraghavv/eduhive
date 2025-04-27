@@ -20,36 +20,31 @@ const useChat = ({
   >([]);
   const [loading, setLoading] = useState(false);
 
-  const sendMessage = async ({
-    type,
-    content,
-    message,
-    url,
-  }: {
-    type: "image" | "text";
-    content: "string";
-    url: "string";
-    message: "string";
-  }) => {
+  const sendMessage = async ({ type, content, url }: Message) => {
+    const userMessage =
+      type === "text" ? content ?? "" : "Here is the image to analyze."; // or any prompt you want
+
+    if (!userMessage.trim()) {
+      toast.error("Message is empty.");
+      return;
+    }
+
     const updatedMessages = [
       ...messages,
-      { role: "user" as const, content: message },
+      { role: "user" as const, content: userMessage },
     ];
     setMessages(updatedMessages);
     setLoading(true);
 
     try {
-      // console.log("rheheai");
-
       const res = await axios.post("/api/chat", {
         messages: updatedMessages,
         model:
-          type == "image"
+          type === "image"
             ? "meta-llama/llama-4-scout-17b-16e-instruct"
             : selectedModel,
+        file_urls: type === "image" && url ? [url] : undefined, // 🔥 ADD THIS!
       });
-
-      console.log("reached", res);
 
       setMessages([
         ...updatedMessages,
@@ -121,7 +116,6 @@ const sendNoteQuery = async ({
     ai_response = res?.data?.content;
     return ai_response;
   } catch (e) {
-    console.log("error is :", e);
     toast.error("Error sending magic query to groq");
   } finally {
     toast("Task Over");

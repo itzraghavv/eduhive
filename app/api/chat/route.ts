@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   console.log(messages, model);
 
   try {
-    const response = await sendMessageToGroq(messages, model);
+    const response = await sendMessageToGroq({ messages, model });
     return NextResponse.json({ content: response });
   } catch (err) {
     console.log(err);

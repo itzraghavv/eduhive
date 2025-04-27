@@ -45,14 +45,16 @@ export const ChatBox = ({ messages, loading }: ChatBoxProps) => {
               <img
                 src={message.url}
                 alt="Uploaded content"
-                className="rounded-lg max-w-xs"
+                className="rounded-lg max-w-full max-h-96 object-contain mx-auto"
               />
             ) : (
               <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkBreaks]}
                 rehypePlugins={[rehypeHighlight]}
               >
-                {typeof message.content === "string" ? message.content : (message.content as any)?.content ?? ""}
+                {typeof message.content === "string"
+                  ? message.content
+                  : (message.content as any)?.content ?? ""}
               </ReactMarkdown>
             )}
           </CardContent>
