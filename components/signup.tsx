@@ -47,6 +47,15 @@ export const SignUp = () => {
         });
 
         if (loginRes?.ok) {
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              username,
+              email,
+              bio: "Hey there! I'm using EduHive.", // default bio
+              image: "", // default image
+            })
+          );
           router.push("/chat");
         } else {
           setMessage("Signed up but failed to sign in.");
