@@ -48,7 +48,7 @@ The real-world value: democratizing quality education with easy-to-use tools for
 - Hosting: Vercel
 
 ### Sponsor Technologies Used (if any):
-  ✅  **Groq:** _How you used Groq_  
+- [x] **Groq:** _How you used Groq_  
 - [ ] **Monad:** _Your blockchain implementation_  
 - [ ] **Fluvio:** _Real-time data handling_  
 - [ ] **Base:** _AgentKit / OnchainKit / Smart Wallet usage_  
@@ -61,10 +61,10 @@ The real-world value: democratizing quality education with easy-to-use tools for
 
 Highlight the most important features of your project:
 
-- ✅ User authentication (Sign up/Login) 
-- ✅ Feature 2  
-- ✅ Feature 3  
-- ✅ Feature 4  
+- ✅ Minimalistic and responsive UI with TailwindCSS and Lucide icons
+- ✅ User authentication and secure access via NextAuth & Supabase 
+- ✅ Access and learn from educational videos via links without uploading.  
+- ✅ Enable students to create, edit, and organize notes linked to specific videos, making learning more engaging and structured. 
 
 Add images, GIFs, or screenshots if helpful!
 
