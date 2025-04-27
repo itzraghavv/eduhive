@@ -1,37 +1,35 @@
 ![github-submission-banner](https://github.com/user-attachments/assets/a1493b84-e4e2-456e-a791-ce35ee2bcf2f)
 
-# 🚀 Project Title
+# 🚀  EduHive
 
-> A one-line tagline or mission statement for your project.
+> Empowering education by connecting learners and educators through a dynamic online platform.
 
 ---
 
 ## 📌 Problem Statement
 
-Select the problem statement number and title from the official list given in Participant Manual.
-
-**Example:**  
-**Problem Statement 7 – Transform the Future of Rural Commerce**
+Problem Statement 3 – Revolutionizing Digital Learning Platforms
 
 ---
 
 ## 🎯 Objective
 
-What problem does your project solve, and who does it serve?  
-Briefly describe the real-world use case and the value it provides.
+EduHive addresses the challenge of providing accessible, efficient, and engaging digital education.
+It serves students, educators, and institutions by offering an all-in-one platform for course creation, enrollment, and management.
+The real-world value: democratizing quality education with easy-to-use tools for teaching and learning.
 
 ---
 
 ## 🧠 Team & Approach
 
 ### Team Name:  
-`Your team name here`
+`Team Innovators`
 
 ### Team Members:  
-- Name 1 (GitHub / LinkedIn / Role)  
-- Name 2  
-- Name 3  
-*(Add links if you want)*
+- Avi Mahajan [@ItsKishnA](https://github.com/ItsKishnA)  
+- Raghav Tandulkar [@itzraghavv](https://github.com/itzraghavv)  
+- RAVINDRANATH A [@Ravindranath04](https://github.com/Ravindranath04) 
+- Om Venkata Srinivas [@SrinivasDevolper](https://github.com/SrinivasDevolper)
 
 ### Your Approach:  
 - Why you chose this problem  
@@ -43,14 +41,14 @@ Briefly describe the real-world use case and the value it provides.
 ## 🛠️ Tech Stack
 
 ### Core Technologies Used:
-- Frontend:
-- Backend:
-- Database:
-- APIs:
-- Hosting:
+- Framework: Next.js (React-based Fullstack Framework)
+- Styling: TailwindCSS
+- Database: Supabase Postgres
+- ORM: Prisma ORM
+- Hosting: Vercel
 
 ### Sponsor Technologies Used (if any):
-- [ ] **Groq:** _How you used Groq_  
+- [x] **Groq:** _How you used Groq_  
 - [ ] **Monad:** _Your blockchain implementation_  
 - [ ] **Fluvio:** _Real-time data handling_  
 - [ ] **Base:** _AgentKit / OnchainKit / Smart Wallet usage_  
@@ -63,7 +61,7 @@ Briefly describe the real-world use case and the value it provides.
 
 Highlight the most important features of your project:
 
-- ✅ Feature 1  
+- ✅ User authentication (Sign up/Login) 
 - ✅ Feature 2  
 - ✅ Feature 3  
 - ✅ Feature 4  
@@ -81,9 +79,9 @@ Add images, GIFs, or screenshots if helpful!
 
 ## ✅ Tasks & Bonus Checklist
 
-- [ ] **All members of the team completed the mandatory task - Followed at least 2 of our social channels and filled the form** (Details in Participant Manual)  
-- [ ] **All members of the team completed Bonus Task 1 - Sharing of Badges and filled the form (2 points)**  (Details in Participant Manual)
-- [ ] **All members of the team completed Bonus Task 2 - Signing up for Sprint.dev and filled the form (3 points)**  (Details in Participant Manual)
+- [x] **All members of the team completed the mandatory task - Followed at least 2 of our social channels and filled the form** (Details in Participant Manual)  
+- [x] **All members of the team completed Bonus Task 1 - Sharing of Badges and filled the form (2 points)**  (Details in Participant Manual)
+- [x] **All members of the team completed Bonus Task 2 - Signing up for Sprint.dev and filled the form (3 points)**  (Details in Participant Manual)
 
 *(Mark with ✅ if completed)*
 
@@ -92,24 +90,34 @@ Add images, GIFs, or screenshots if helpful!
 ## 🧪 How to Run the Project
 
 ### Requirements:
-- Node.js / Python / Docker / etc.
-- API Keys (if any)
-- .env file setup (if needed)
+- Node.js 
 
 ### Local Setup:
 ```bash
 # Clone the repo
-git clone https://github.com/your-team/project-name
+git clone https://github.com/itzraghavv/eduhive
 
 # Install dependencies
-cd project-name
+cd eduhive
+
+# Setup Environment Varianbles
+cp env.example .env
+
+# Generate a NEXTAUTH_SECRET (only once)
+openssl rand -base64 32
+
+# Install Packages
 npm install
+
+# After installing dependencies
+npx prisma generate
+
+# (optional) If you need to apply migrations
+npx prisma migrate dev
 
 # Start development server
 npm run dev
 ```
-
-Provide any backend/frontend split or environment setup notes here.
 
 ---
 
@@ -125,14 +133,16 @@ List improvements, extensions, or follow-up features:
 
 ## 📎 Resources / Credits
 
-- APIs or datasets used  
-- Open source libraries or tools referenced  
-- Acknowledgements  
+- [Supabase](https://supabase.com/) for backend services
+- [Tailwind CSS](https://tailwindcss.com/) for UI styling
+- [Groq AI](https://groq.com/) for multimodal capabilities
 
 ---
 
 ## 🏁 Final Words
 
-Share your hackathon journey — challenges, learnings, fun moments, or shout-outs!
+EduHive was a journey to reimagine digital learning.
+From authentication to real-time uploads, every challenge led to meaningful learning.
+Huge thanks to the open-source community and hackathon mentors for constant inspiration!
 
 ---
