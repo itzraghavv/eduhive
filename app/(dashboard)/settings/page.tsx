@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, User } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { NoResponse } from "@/components/auth";
 import { useSession } from "next-auth/react";
 
@@ -55,15 +55,13 @@ export default function SettingsPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex justify-center items-center p-6">
       <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6 space-y-6">
         <div className="flex flex-col items-center text-center">
-          {image ? (
-            <img
-              src={image}
-              alt="Profile"
-              className="w-24 h-24 rounded-full object-cover border-4 border-purple-200"
-            />
-          ) : (
-            <User />
-          )}
+          <img
+            src={image}
+            alt="Profile"
+            className="w-24 h-24 rounded-full object-cover border-4 border-purple-200"
+          />
+          <h2 className="text-xl font-bold mt-4">{username}</h2>
+          <p className="text-sm text-gray-600">{email}</p>
           {isEditing && (
             <input
               className="mt-2 text-sm border px-2 py-1 rounded w-full text-center"
@@ -73,8 +71,6 @@ export default function SettingsPage() {
             />
           )}
 
-          <h2 className="text-xl font-bold mt-4">{username}</h2>
-          <p className="text-sm text-gray-600">{email}</p>
           {isEditing ? (
             <textarea
               value={bio}
