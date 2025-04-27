@@ -73,7 +73,7 @@ Add images, GIFs, or screenshots if helpful!
 ## 📽️ Demo & Deliverables
 
 - Demo Video Link: [View Demo](https://youtu.be/euP7ss4KQlk)
-- Pitch Deck / PPT Link: [View Pitch Deck]()
+- Pitch Deck / PPT Link: [View Pitch Deck](https://www.canva.com/design/DAGl1dRg2s4/ma6pbfygN6AThNtBWsL1DQ/edit)
 
 ---
 
