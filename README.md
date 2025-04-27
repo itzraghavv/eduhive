@@ -32,9 +32,9 @@ The real-world value: democratizing quality education with easy-to-use tools for
 - Om Venkata Srinivas [@SrinivasDevolper](https://github.com/SrinivasDevolper)
 
 ### Your Approach:  
-- Why you chose this problem  
-- Key challenges you addressed  
-- Any pivots, brainstorms, or breakthroughs during hacking  
+- We adopted a strategic design and implementation methodology focused on a user-centric approach, specifically tailoring   EduHive for students.
+- Our core aim was to simplify the learning experience, enhance accessibility, and seamlessly integrate AI-driven capabilities like real-time interactions.
+- Key aspects included iterative prototyping, active feedback integration, and balancing technical scalability with an intuitive user experience. 
 
 ---
 
@@ -48,7 +48,7 @@ The real-world value: democratizing quality education with easy-to-use tools for
 - Hosting: Vercel
 
 ### Sponsor Technologies Used (if any):
-- [x] **Groq:** _How you used Groq_  
+- ✅  **Groq:** _How you used Groq_  
 - [ ] **Monad:** _Your blockchain implementation_  
 - [ ] **Fluvio:** _Real-time data handling_  
 - [ ] **Base:** _AgentKit / OnchainKit / Smart Wallet usage_  
@@ -72,8 +72,8 @@ Add images, GIFs, or screenshots if helpful!
 
 ## 📽️ Demo & Deliverables
 
-- **Demo Video Link:** [Paste YouTube or Loom link here]  
-- **Pitch Deck / PPT Link:** [Paste Google Slides / PDF link here]  
+Demo Video Link: [View Demo](https://youtu.be/euP7ss4KQlk)
+Pitch Deck / PPT Link: [View Pitch Deck]()
 
 ---
 
@@ -125,10 +125,12 @@ npm run dev
 
 List improvements, extensions, or follow-up features:
 
-- 📈 More integrations  
-- 🛡️ Security enhancements  
-- 🌐 Localization / broader accessibility  
-
+- 🗣️ Chat and Collaboration: Enable real-time chat and collaborative note-taking among students.
+- 🧠 Smarter AI Features: Personalize learning with AI-based suggestions and note summarization.
+- 🖼️🎤 Advanced Media Handling: Allow image uploads and voice recordings for richer learning experiences.
+- 🌐 Global Accessibility: Add multilingual support and offline access for global learners.
+- 🛡️ Security Enhancements: Implement encrypted communication and secure file handling.
+  
 ---
 
 ## 📎 Resources / Credits
