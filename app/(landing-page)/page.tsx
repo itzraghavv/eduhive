@@ -43,6 +43,7 @@ export default function HomePage() {
           </li>
           <li className="bg-muted rounded-xl p-4">🎥 Video Summarization</li>
           <li className="bg-muted rounded-xl p-4">📝 AI-Powered Notes</li>
+          <li className="bg-muted rounded-xl p-4">📝 AI-Powered Notes</li>
         </ul>
       </section>
     </main>
