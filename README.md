@@ -8,7 +8,7 @@
 
 ## 📌 Problem Statement
 
-Problem Statement 3 – Revolutionizing Digital Learning Platforms
+Problem Statement 3 – Revolutionizing Digital Learning Platforms.
 
 ---
 
