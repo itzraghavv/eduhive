@@ -50,6 +50,17 @@ export default function HomePage() {
         </Card>
       </section>
 
+      <section className="mt-16 w-full max-w-3xl text-center space-y-6">
+        <h2 className="text-2xl font-semibold">Why use our Chatbot?</h2>
+        <ul className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
+          <li className="bg-muted rounded-xl p-4">
+            📘 Context-Aware Study Help
+          </li>
+          <li className="bg-muted rounded-xl p-4">🎥 Video Summarization</li>
+          <li className="bg-muted rounded-xl p-4">📝 AI-Powered Notes</li>
+          <li className="bg-muted rounded-xl p-4">📝 AI-Powered Notes</li>
+        </ul>
+
       <section className="mt-20 w-full max-w-4xl text-center space-y-8 relative z-10">
         <h2 className="text-3xl font-bold text-gray-800">Why use our Chatbot?</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
